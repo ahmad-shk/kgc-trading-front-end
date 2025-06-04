@@ -18,6 +18,7 @@ interface TradePayload {
   unit: string;
   order_type: string;
   leverage: number;
+  transactionHash: string;
 }
 interface SubmitResult {
   success: boolean;
@@ -30,6 +31,7 @@ interface OrderPayload {
   amount: number;
   leverage: number;
   unit: string;
+  transactionHash: string;
 }
 
 export default function TradingInterface() {
@@ -48,10 +50,8 @@ export default function TradingInterface() {
   const balance = 50;
   const [buyPrice, setBuyPrice] = useState<string>("0");
   const [sellPrice, setSellPrice] = useState<string>("0");
-  const [payloadLong, setPayloadLong] = useState<TradePayload>({ symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5, });
-  const [payloadShort, setPayloadShort] = useState<TradePayload>({
-    symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5,
-  });
+  const [payloadLong, setPayloadLong] = useState<TradePayload>({ symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5, transactionHash: "0xe736ae8cac865c596ba5fb463834c031c45baa9e9302767b2b51cce0baeaa8b1" });
+  const [payloadShort, setPayloadShort] = useState<TradePayload>({ symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5, transactionHash: "0xe736ae8cac865c596ba5fb463834c031c45baa9e9302767b2b51cce0baeaa8b1" });
 
   const setDataLong = (val: string | number, name: string, type: string) => {
     if (type === "Long") {
@@ -131,37 +131,37 @@ export default function TradingInterface() {
     finally {
       setLoaderLong(false)
       setLoaderShort(false)
-        const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(fetchOrders());
-    }
+      const token = localStorage.getItem("token");
+      if (token) {
+        dispatch(fetchOrders());
+      }
     }
   };
 
   const handleButtonClick = async (payload: any) => {
     const result = await submitOrder(payload);
-    if(result.success){
+    if (result.success) {
       toast.success("Order created successfully")
-    }else{
+    } else {
       toast.error(result?.message)
     }
-   
+
   };
   const handleShortClick = async (payload: any) => {
     const result = await submitOrder(payload);
-     if(result.success){
+    if (result.success) {
       toast.success("Order created successfully")
-    }else{
+    } else {
       toast.error(result?.message)
     }
   };
-   
+
 
   return (
     <div className="rounded-xl -border -border-gray-700 bg-[#181A20] pb-6 text-[#848E9C] mx-auto">
       {/* Buy Long Section */}
       <div className="grid grid-cols-2 gap-6 text-[14px] font-semibold text-[#edb546] pb-1 pt-5 px-5 border-b border-[#2B3139]">
-        
+
         <h2>Buy Long</h2>
         <h2>Sell Short</h2>
       </div>

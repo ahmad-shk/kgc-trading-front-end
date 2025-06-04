@@ -13,8 +13,9 @@ interface Order {
   amount: number;
   leverage: number;
   order_type: string;
-  status: "inprogress" | "Order History" | "Trade History" | "pending" | "complete" | "OPEN";
+  status: "INPROGRESS" | "Order History" | "Trade History" | "PENDING" | "COMPLETE" | "OPEN";
   createdAt: string;
+  transactionHash?: string;
 }
 
 const tabs = ["Open Order", "Order History", "Trade History", "Pool"];
@@ -57,26 +58,26 @@ const OrdersPanel: React.FC = () => {
     if (!data) return [];
     switch (activeTab) {
       case "Open Order":
-        return data.filter((order) => order.status === "inprogress");
+        return data.filter((order) => order.status === "INPROGRESS");
       case "Order History":
-        return data.filter((order) => order.status === "pending");
+        return data.filter((order) => order.status === "PENDING");
       case "Trade History":
-        return data.filter((order) => order.status === "complete");
+        return data.filter((order) => order.status === "COMPLETE");
       case "Pool":
         return poolData.filter((order) => order.status === "OPEN");
       default:
         return data;
     }
   };
-
+console.log(poolData,'pool')
   const getTabCount = (tab: string) => {
     switch (tab) {
       case "Open Order":
-        return data.filter((order) => order.status === "inprogress").length;
+        return data.filter((order) => order.status === "INPROGRESS").length;
       case "Order History":
-        return data.filter((order) => order.status === "pending").length;
+        return data.filter((order) => order.status === "PENDING").length;
       case "Trade History":
-        return data.filter((order) => order.status === "complete").length;
+        return data.filter((order) => order.status === "COMPLETE").length;
       case "Pool":
         return poolData.filter((order) => order.status === "OPEN").length;
       default:

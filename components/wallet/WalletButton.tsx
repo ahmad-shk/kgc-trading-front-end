@@ -22,6 +22,7 @@ const WalletButton = () => {
   const [loading, setLoading] = useState(false);
   const [prevAddress, setPrevAddress] = useState<string | null>(null);
   const checksummed = address ? getAddress(address as string) : "Wallet not connected";
+
   useEffect(() => {
     if (address) {
       const checksummed = getAddress(address);
@@ -33,7 +34,10 @@ const WalletButton = () => {
   }, [address]);
 
   useEffect(() => {
-    if (isConnected && prevAddress == null) {
+    console.log("lognnnnn")
+    if (isConnected 
+      // && prevAddress == null
+    ) {
       login(); // Only login AFTER successful connection
     }
     if (!isConnected) {
