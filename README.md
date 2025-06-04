@@ -1,1 +1,1 @@
-# kgc-trading-front-end
+# kgc-trading
