@@ -69,17 +69,17 @@ const OrdersPanel: React.FC = () => {
         return data;
     }
   };
-console.log(poolData,'pool')
+// console.log(poolData,'pool')
   const getTabCount = (tab: string) => {
     switch (tab) {
       case "Open Order":
-        return data.filter((order) => order.status === "INPROGRESS").length;
+        return data.filter((order) => order.status.toLocaleLowerCase() === "INPROGRESS".toLocaleLowerCase()).length;
       case "Order History":
-        return data.filter((order) => order.status === "PENDING").length;
+        return data.filter((order) => order.status.toLocaleLowerCase() === "PENDING".toLocaleLowerCase()).length;
       case "Trade History":
-        return data.filter((order) => order.status === "COMPLETE").length;
+        return data.filter((order) => order.status.toLocaleLowerCase() === "COMPLETE".toLocaleLowerCase()).length;
       case "Pool":
-        return poolData.filter((order) => order.status === "OPEN").length;
+        return poolData.filter((order) => order.status.toLocaleLowerCase() === "OPEN".toLocaleLowerCase()).length;
       default:
         return 0;
     }
