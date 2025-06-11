@@ -16,7 +16,7 @@ export default function AmountInput({
   value,
   onChange,
   label = "Amount",
-  unit = "BNB",
+  unit = "USDT",
   setValue,
   onValueChange
 }: AmountInputProps) {

@@ -189,7 +189,7 @@ export default function TradingInterface() {
               onValueChange={(val) => setDataLong(val, "Amount", "Long")}
               setValue={setBuyAmount}
               label="Amount"
-              unit={coinName}
+              // unit={coinName}
             />
           </div>
           {/* Percentage Selector */}
@@ -252,7 +252,7 @@ export default function TradingInterface() {
               onValueChange={(val) => setDataLong(val, "Amount", "Short")}
               setValue={setSellAmount}
               label="Amount"
-              unit={coinName}
+              // unit={coinName}
             />
           </div>
           {/* Percentage Selector */}
