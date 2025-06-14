@@ -56,7 +56,6 @@ const WalletButton = () => {
       dispatch(fetchOrders());
       dispatch(fetchPool())
       toast.success("Wallet Connected successfully")
-      // axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.access_token}`;
     } catch (err) {
       logout();
       createAcount();

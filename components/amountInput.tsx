@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { IncrimentIcon, IconDic } from "./svg";
+import { useSelector } from "react-redux";
 
 interface AmountInputProps {
   value: string | number;
@@ -21,7 +22,8 @@ export default function AmountInput({
   onValueChange
 }: AmountInputProps) {
   const MIN_VALUE = 5;
-  const USER_BALANCE = 50;
+  const { userBalance } = useSelector((state: any) => state.binance);
+  const USER_BALANCE = userBalance?.usdt ?? '0';
   const [errorMsg, setErrorMsg] = useState("");
 
   const numericValue = typeof value === "string" ? parseFloat(value) : value;
@@ -29,8 +31,8 @@ export default function AmountInput({
   const incrementValue = () => {
     const newValue = numericValue + 1;
 
-    if (newValue > USER_BALANCE) {
-      setErrorMsg("You have not enough balance");
+    if (newValue >= USER_BALANCE) {
+      setErrorMsg("You have not enough USDT");
     } else {
       setErrorMsg(""); // ✅ Clear error
       setValue?.(newValue);

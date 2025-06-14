@@ -18,7 +18,7 @@ interface Order {
   transactionHash?: string;
 }
 
-const tabs = ["Open Order", "Order History", "Trade History", "Pool"];
+const tabs = ["Open Order", "Order History", "Trade History", "Pool", "Funds"];
 
 const OrdersPanel: React.FC = () => {
   const { orders } = useSelector((state: RootState) => state.order);
@@ -29,6 +29,7 @@ const OrdersPanel: React.FC = () => {
   const [poolData, setPoolData] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState("Open Order");
   const dispatch = useDispatch<AppDispatch>();
+  const [fundsData, setFundsData] = useState([{'symbol': 'USDT', "amount": '10' }, {'symbol': 'BNB', "amount": '20' }])
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage?.getItem("token") : null;
@@ -65,10 +66,13 @@ const OrdersPanel: React.FC = () => {
         return data.filter((order) => order.status === "COMPLETE");
       case "Pool":
         return poolData.filter((order) => order.status === "OPEN");
+      case "Funds":
+        return fundsData;
       default:
         return data;
     }
   };
+  
 // console.log(poolData,'pool')
   const getTabCount = (tab: string) => {
     switch (tab) {
@@ -80,6 +84,8 @@ const OrdersPanel: React.FC = () => {
         return data.filter((order) => order.status.toLocaleLowerCase() === "COMPLETE".toLocaleLowerCase()).length;
       case "Pool":
         return poolData.filter((order) => order.status.toLocaleLowerCase() === "OPEN".toLocaleLowerCase()).length;
+      case "Funds":
+        return fundsData.length;
       default:
         return 0;
     }
@@ -92,6 +98,7 @@ const OrdersPanel: React.FC = () => {
     setPoolData([]);
   }
 }, [isConnected]);
+
   return (
     <div className="bg-[#181A20] text-white p-4 sm:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
       <div className="flex flex-wrap gap-4 sm:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4">
@@ -127,8 +134,10 @@ const OrdersPanel: React.FC = () => {
         </div>
       ) : (
         <div className="max-h-[400px] overflow-y-auto">
+          
           <table className="w-full table-fixed">
             <thead>
+              
               <tr className="text-[#EDB546] text-sm sticky top-0 bg-[#181A20] z-10">
                 {activeTab === "Pool" ? (
                   <>
@@ -137,7 +146,13 @@ const OrdersPanel: React.FC = () => {
                     <th className="py-4 px-4 font-semibold w-1/4">Start Time</th>
                     <th className="py-4 px-4 font-semibold w-1/4">End Time</th>
                   </>
-                ) : (
+                ) : activeTab === "Funds" ?  (
+                  <>
+                    <th className="py-4 px-4 font-semibold w-1/5">Name</th>
+                    <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
+                  </>
+                ):
+                (
                   <>
                     <th className="py-4 px-4 font-semibold w-1/5">Name</th>
                     <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
@@ -145,7 +160,8 @@ const OrdersPanel: React.FC = () => {
                     <th className="py-4 px-4 font-semibold w-1/5">Order Type</th>
                     <th className="py-4 px-4 font-semibold w-1/5">Created At</th>
                   </>
-                )}
+                )
+                }
               </tr>
             </thead>
             <tbody>
@@ -166,7 +182,16 @@ const OrdersPanel: React.FC = () => {
                           {new Date(item?.end_timestamps).toLocaleString()}
                         </td>
                       </>
-                    ) : (
+                    ) :
+                    
+                    activeTab === "Funds" ? (
+                      <>
+                      <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
+                      <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
+                      </>
+                    ) :
+
+                    (
                       <>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>

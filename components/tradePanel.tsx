@@ -36,6 +36,9 @@ interface OrderPayload {
 
 export default function TradingInterface() {
   const dispatch = useDispatch<AppDispatch>();
+  const { userBalance } = useSelector((state: any) => state.binance);
+  const balance = userBalance?.usdt ?? '0';
+  const balanceBNB = userBalance?.bnb ?? '0';
   const [loaderLong, setLoaderLong] = React.useState<boolean>(false);
   const [loaderShort, setLoaderShort] = React.useState<boolean>(false);
   const symbol = useSelector((state: any) => state.binance.symbol);
@@ -47,7 +50,6 @@ export default function TradingInterface() {
   const [CurrencyType, setCurrencyType] = useState<string>("");
   const [coinName, setCoinName] = useState<string>("");
   const percentages = [5, 10, 15, 20, 25]
-  const balance = 50;
   const [buyPrice, setBuyPrice] = useState<string>("0");
   const [sellPrice, setSellPrice] = useState<string>("0");
   const [payloadLong, setPayloadLong] = useState<TradePayload>({ symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5, transactionHash: "0xe736ae8cac865c596ba5fb463834c031c45baa9e9302767b2b51cce0baeaa8b1" });
@@ -102,10 +104,12 @@ export default function TradingInterface() {
     const { symbol, order_type, amount, leverage, unit } = payload;
 
 
-    if (isNaN(amount) || amount < 5)
-      return { success: false, message: "Amount must be at least 5" };
-    if (isNaN(amount) || amount > balance)
-      return { success: false, message: "you dont have enough balance" };
+    if (isNaN(amount) || amount < 1)
+      return { success: false, message: "Amount must be at least 1" };
+    if (isNaN(amount) || amount >= balance)
+      return { success: false, message: "you dont have enough USDT" };
+    if (isNaN(amount) || balanceBNB <= 0.0015)
+      return { success: false, message: "you dont have enough BNB (atleast 0.0016 BNB required!)" };
     if (isNaN(leverage) || leverage < 5)
       return { success: false, message: "Leverage must be at least 5" };
     if (unit !== "USDT") return { success: false, message: "Unit must be USDT" };

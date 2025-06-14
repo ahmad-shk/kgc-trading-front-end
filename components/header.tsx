@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useBinanceWebSocket } from "@/hooks/use-websocket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import WalletButton from "./wallet/WalletButton";
 import { useAccount } from "@/config/context/AccountContext";
+import { useEffect } from "react";
+import { currentBalance, currentBalanceUSDT } from "@/config/Web3Controller";
+import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice";
 
 
 const tradingPairs = [
@@ -35,9 +38,21 @@ const tradingPairs = [
 
 
 export default function Header() {
+  const dispatch = useDispatch()
   useBinanceWebSocket(tradingPairs);
   const { symbol } = useSelector((state: any) => state.binance);
   const { address, isConnected } = useAccount();
+  useEffect(() => {
+    if (isConnected) {
+      getBalance()
+    }
+  }, [isConnected])
+
+  const getBalance = async () => {
+    const balances = await currentBalance(address) as balanceInnterface;
+    dispatch(setUserBalance(balances))
+  }
+
 
   return (
     <header className="border-b border-[#1f2128] py-6">

@@ -18,6 +18,11 @@ interface TickerData {
     quoteVolume: string;
 }
 
+export interface balanceInnterface {
+    bnb: string;
+    usdt: string;
+}
+
 interface BinanceState {
     coins: Coin[];
     topGainers: Coin[];
@@ -25,6 +30,7 @@ interface BinanceState {
     topVolume: Coin[];
     hotCoins: Coin[];
     loading: boolean;
+    userBalance:balanceInnterface | null
     error: string | null;
     symbol: string;
 }
@@ -37,6 +43,7 @@ const initialState: BinanceState = {
     hotCoins: [],
     loading: false,
     error: null,
+    userBalance:null,
     symbol: 'BNBUSDT',
 };
 
@@ -101,8 +108,13 @@ const binanceSlice = createSlice({
             state.hotCoins = newList.sort((a, b) => Math.abs(b.priceChangePercent) - Math.abs(a.priceChangePercent))
                 .filter((item: Coin) => (item.symbol.toLowerCase().endsWith('usdt'))).slice(0, 3)
 
+        },
+
+        setUserBalance: (state, action: PayloadAction<balanceInnterface>) => {
+            state.userBalance = action.payload
         }
     },
+
 
     extraReducers: (builder) => {
         builder
@@ -130,5 +142,5 @@ const binanceSlice = createSlice({
     },
 });
 
-export const { setBinanceSymbol, updateLiveTicker } = binanceSlice.actions;
+export const { setBinanceSymbol, updateLiveTicker, setUserBalance } = binanceSlice.actions;
 export default binanceSlice.reducer;
