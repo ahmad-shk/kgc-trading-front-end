@@ -21,6 +21,7 @@ interface TickerData {
 export interface balanceInnterface {
     bnb: string;
     usdt: string;
+    allowance:string;
 }
 
 interface BinanceState {

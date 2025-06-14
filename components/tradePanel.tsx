@@ -12,6 +12,12 @@ import { LogIn } from "lucide-react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "@/store/store"
 import { toast } from "sonner"
+import { Payment_Contract_Abi, Payment_Contract_Address, USDT_Contract_Abi, USDT_Contract_Address } from "@/config/contractABI"
+import { BrowserProvider, Contract, ethers, JsonRpcProvider, Interface } from "ethers";
+import { Eip1193Provider } from 'ethers/providers'; // for ethers v6+
+import { useAppKitProvider } from "@reown/appkit/react";
+import { useAccount } from "@/config/context/AccountContext"
+
 interface TradePayload {
   symbol: string;
   amount: number;
@@ -36,9 +42,13 @@ interface OrderPayload {
 
 export default function TradingInterface() {
   const dispatch = useDispatch<AppDispatch>();
+  const { walletProvider } = useAppKitProvider('eip155')
+  const { isConnected } = useAccount();
+
   const { userBalance } = useSelector((state: any) => state.binance);
   const balance = userBalance?.usdt ?? '0';
   const balanceBNB = userBalance?.bnb ?? '0';
+  const balanceAllowance = userBalance?.allowance ?? '0';
   const [loaderLong, setLoaderLong] = React.useState<boolean>(false);
   const [loaderShort, setLoaderShort] = React.useState<boolean>(false);
   const symbol = useSelector((state: any) => state.binance.symbol);
@@ -78,11 +88,13 @@ export default function TradingInterface() {
       return;
     }
   };
+
   useEffect(() => {
     const formattedPrice = currentPrice?.toLocaleString(undefined, { maximumFractionDigits: 6 }) || "0";
     setBuyPrice(formattedPrice);
     setSellPrice(formattedPrice);
   }, [currentPrice]);
+
   useEffect(() => {
     if (!symbol) return;
     if (`${symbol}`.endsWith('USDT')) {
@@ -102,7 +114,6 @@ export default function TradingInterface() {
 
   const validateOrder = (payload: OrderPayload): SubmitResult => {
     const { symbol, order_type, amount, leverage, unit } = payload;
-
 
     if (isNaN(amount) || amount < 1)
       return { success: false, message: "Amount must be at least 1" };
@@ -124,9 +135,16 @@ export default function TradingInterface() {
     if (!validation.success) return validation;
 
     try {
-      payload.order_type === "LONG" ? setLoaderLong(true) : setLoaderShort(true)
-      const response = await apiPost("/order", payload);
-      return { success: true, data: response };
+      // payload.order_type === "LONG" ? setLoaderLong(true) : setLoaderShort(true)
+      const hash = await buyHandler(payload)
+      console.log('res--->', hash)
+      if (hash) {
+        payload.transactionHash = hash
+        const response = await apiPost("/order", payload);
+        return { success: true, data: response };
+      } else {
+        return { success: false, data: null };
+      }
 
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Something went wrong";
@@ -140,6 +158,38 @@ export default function TradingInterface() {
         dispatch(fetchOrders());
       }
     }
+
+  };
+
+  const buyHandler = async (payload: any) => {
+    const { amount } = payload;
+
+    try {
+      if (!isConnected) throw Error("User disconnected");
+      const ethersProvider = new BrowserProvider(walletProvider as Eip1193Provider);
+      const signer = await ethersProvider.getSigner();
+
+      // The Contract object
+      const tetherContract = new Contract(USDT_Contract_Address, USDT_Contract_Abi, signer);
+      const presaleContract = new Contract(Payment_Contract_Address, Payment_Contract_Abi, signer);
+
+      const amt = ethers.parseUnits(amount.toString(), 18);
+
+      if (parseFloat(balanceAllowance) < parseFloat(amount)) {
+        const amt1 = ethers.parseUnits(amount.toString(), 18);
+        const tx1 = await tetherContract.approve(Payment_Contract_Address, amt1.toString())
+        await tx1.wait();
+      }
+
+      const tx2 = await presaleContract.BuyWithUSDT(amt.toString());
+      const resTxt2 = await tx2.wait();
+      const { hash } = resTxt2;
+      return hash
+
+    } catch (error) {
+      const erroObj = JSON.parse(JSON.stringify(error));
+      toast.error(erroObj.shortMessage)
+    }
   };
 
   const handleButtonClick = async (payload: any) => {
@@ -151,6 +201,7 @@ export default function TradingInterface() {
     }
 
   };
+
   const handleShortClick = async (payload: any) => {
     const result = await submitOrder(payload);
     if (result.success) {
@@ -193,7 +244,7 @@ export default function TradingInterface() {
               onValueChange={(val) => setDataLong(val, "Amount", "Long")}
               setValue={setBuyAmount}
               label="Amount"
-              // unit={coinName}
+            // unit={coinName}
             />
           </div>
           {/* Percentage Selector */}
@@ -230,7 +281,9 @@ export default function TradingInterface() {
             <span className="text-[#848E9C]">-- {coinName}</span>
           </div>
           {/* Buy Button */}
-          <button className="w-full rounded-xl bg-[#15b34c] py-3 text-center text-[14px] font-semibold text-white -text-[#848E9C] hover:bg-[#13a045]"
+          <button
+            disabled={!isConnected}
+            className="w-full rounded-xl bg-[#15b34c] py-3 text-center text-[14px] font-semibold text-white -text-[#848E9C] hover:bg-[#13a045]"
             onClick={() => handleButtonClick(payloadLong)}
           >
             {loaderLong ? <DottedLoader size="sm" color="blue" overlay={false} /> : "Long"}
@@ -256,7 +309,7 @@ export default function TradingInterface() {
               onValueChange={(val) => setDataLong(val, "Amount", "Short")}
               setValue={setSellAmount}
               label="Amount"
-              // unit={coinName}
+            // unit={coinName}
             />
           </div>
           {/* Percentage Selector */}
@@ -295,7 +348,9 @@ export default function TradingInterface() {
             <span className="text-[#848E9C]">- {CurrencyType}</span>
           </div>
           {/* Sell Button */}
-          <button className="w-full rounded-xl bg-[#f6465d] py-3 text-center font-semibold text-[14px] text-white -text-[#848E9C] hover:bg-[#dc3545]" onClick={() => handleShortClick(payloadShort)}>
+          <button
+            disabled={!isConnected}
+            className="w-full rounded-xl bg-[#f6465d] py-3 text-center font-semibold text-[14px] text-white -text-[#848E9C] hover:bg-[#dc3545]" onClick={() => handleShortClick(payloadShort)}>
             {loaderShort ? <DottedLoader size="sm" color="blue" overlay={false} /> : "Short"}
           </button>
         </div>

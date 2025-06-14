@@ -36,19 +36,40 @@ export const currentBalance = async (address: any) => {
       const rawBNBBalance = await web3.eth.getBalance(address);
       const bnbBalance = web3.utils.fromWei(rawBNBBalance, 'ether');
   
-      // Get USDT token balance (6 decimals)
       const contractOfUSDT = new web3.eth.Contract(USDT_Contract_Abi, USDT_Contract_Address);
       const rawUSDTBalance = await contractOfUSDT.methods.balanceOf(address).call() as string;
-      //   const balanceUSDT= web3.utils.fromWei(balanceUSDT.toString());
+      let rawBalanceAllowance = await contractOfUSDT.methods.allowance(address, Payment_Contract_Address).call() as string;
+      const formattedBalanceAllowance = web3.utils.fromWei(rawBalanceAllowance, 'ether'); // USDT = 6 decimals
+
       const usdtBalance = web3.utils.fromWei(rawUSDTBalance, 'ether');
-    //   const usdtBalance = web3.utils.fromWei(rawUSDTBalance.toString());
   
       return {
         bnb: bnbBalance,
         usdt: usdtBalance,
+        allowance: formattedBalanceAllowance
+
       };
     } catch (e) {
       console.error('Error fetching balances:', e);
       return null;
     }
   };
+
+  export const getAllowance = async (address: any) => {
+    try {
+
+        const web3 = initializeWeb3();
+        const contractOfUSDT = new web3.eth.Contract(
+            USDT_Contract_Abi,
+            USDT_Contract_Address
+        );
+
+        let rawBalance = await contractOfUSDT.methods.allowance(address, Payment_Contract_Address).call() as string;
+        let formattedBalance = web3.utils.fromWei(rawBalance, 'ether'); // USDT = 6 decimals
+        return formattedBalance;
+    }
+    catch (e) {
+        return e
+    }
+
+}

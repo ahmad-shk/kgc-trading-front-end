@@ -19,7 +19,7 @@ export default function AmountInput({
   label = "Amount",
   unit = "USDT",
   setValue,
-  onValueChange
+  onValueChange,
 }: AmountInputProps) {
   const MIN_VALUE = 5;
   const { userBalance } = useSelector((state: any) => state.binance);
