@@ -21,6 +21,7 @@ interface Order {
 const tabs = ["Open Order", "Order History", "Trade History", "Pool", "Funds"];
 
 const OrdersPanel: React.FC = () => {
+  const { userBalance } = useSelector((state: any) => state.binance);
   const { orders } = useSelector((state: RootState) => state.order);
   const { pool } = useSelector((state: RootState) => state.pool);
   const { isConnected } = useAccount();
@@ -29,7 +30,15 @@ const OrdersPanel: React.FC = () => {
   const [poolData, setPoolData] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState("Open Order");
   const dispatch = useDispatch<AppDispatch>();
+
+
   const [fundsData, setFundsData] = useState([{'symbol': 'USDT', "amount": '10' }, {'symbol': 'BNB', "amount": '20' }])
+
+  useEffect(()=>{
+     if(userBalance){
+      setFundsData([{'symbol': 'USDT', "amount": userBalance.usdt }, {'symbol': 'BNB', "amount": userBalance.bnb }])
+     }
+  },[userBalance])
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage?.getItem("token") : null;
@@ -72,7 +81,7 @@ const OrdersPanel: React.FC = () => {
         return data;
     }
   };
-  
+
 // console.log(poolData,'pool')
   const getTabCount = (tab: string) => {
     switch (tab) {
