@@ -59,7 +59,7 @@ export default function TradingInterface() {
   const [sellPercentage, setSellPercentage] = useState(5)
   const [CurrencyType, setCurrencyType] = useState<string>("");
   const [coinName, setCoinName] = useState<string>("");
-  const percentages = [5, 10, 15, 20, 25]
+  const percentages = [5, 15, 30, 50, 75]
   const [buyPrice, setBuyPrice] = useState<string>("0");
   const [sellPrice, setSellPrice] = useState<string>("0");
   const [payloadLong, setPayloadLong] = useState<TradePayload>({ symbol: "", amount: 0, unit: "USDT", order_type: "", leverage: 5, transactionHash: "0xe736ae8cac865c596ba5fb463834c031c45baa9e9302767b2b51cce0baeaa8b1" });
@@ -137,7 +137,6 @@ export default function TradingInterface() {
     try {
       // payload.order_type === "LONG" ? setLoaderLong(true) : setLoaderShort(true)
       const hash = await buyHandler(payload)
-      console.log('res--->', hash)
       if (hash) {
         payload.transactionHash = hash
         const response = await apiPost("/order", payload);
@@ -274,11 +273,17 @@ export default function TradingInterface() {
           {/* AVBL and Max Buy */}
           <div className="pb-2 pt-2.5 flex justify-between">
             <span className="text-[#848E9C]">AVBL</span>
-            <span className="text-[#848E9C]">- {CurrencyType}</span>
+            <span className="text-[#848E9C]">{balance} USDT</span>
           </div>
           <div className="pb-8 flex justify-between">
-            <button className="text-[#848E9C] underline">Max Buy</button>
-            <span className="text-[#848E9C]">-- {coinName}</span>
+            <button className="text-[#848E9C] underline" onClick={(e)=>{
+              
+              setBuyAmount(balance-1)
+              setDataLong(balance-1, "Amount", "Long");
+            
+            }
+              }>Max Buy</button>
+            {/* <span className="text-[#848E9C]">-- {coinName}</span> */}
           </div>
           {/* Buy Button */}
           <button
@@ -341,11 +346,15 @@ export default function TradingInterface() {
           {/* AVBL and Max Sell */}
           <div className="pb-2 pt-2.5 flex justify-between">
             <span className="text-[#848E9C]">AVBL</span>
-            <span className="text-[#848E9C]">-- {coinName}</span>
+            <span className="text-[#848E9C]">{balance} USDT</span>
           </div>
           <div className="pb-8 flex justify-between">
-            <button className="text-[#848E9C] underline">Max Sell</button>
-            <span className="text-[#848E9C]">- {CurrencyType}</span>
+            <button className="text-[#848E9C] underline" onClick={(e)=>{
+              
+              setSellAmount(balance-1)
+              setDataLong(balance-1, "Amount", "Short")
+              }} >Max Sell</button>
+            {/* <span className="text-[#848E9C]">- {CurrencyType}</span> */}
           </div>
           {/* Sell Button */}
           <button
