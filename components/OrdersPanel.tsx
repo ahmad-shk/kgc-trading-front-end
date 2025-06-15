@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "@/store/slices/orderSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchPool } from "@/store/slices/poolSlice";
+import CountdownTimer from "./countdownTimer";
 
 interface Order {
   _id: string;
@@ -76,7 +77,7 @@ const OrdersPanel: React.FC = () => {
       case "Trade History":
         return data.filter((order) => order.status === "COMPLETE");
       case "Pool":
-        return poolData.filter((order) => order.status === "OPEN");
+        return poolData
       case "Funds":
         return fundsData;
       default:
@@ -109,6 +110,10 @@ const getTabCount = (tab: string) => {
     setPoolData([]);
   }
 }, [isConnected]);
+
+const testStartTimestamp = React.useMemo(() => {
+  return new Date(Date.now() - 2 * 60 * 1000).toISOString();
+}, []); // Runs only once
 
   return (
     <div className="bg-[#181A20] text-white p-4 sm:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
@@ -195,7 +200,10 @@ const getTabCount = (tab: string) => {
                           {new Date(item?.start_timestamps).toLocaleString()}
                         </td>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">
-                          {new Date(item?.end_timestamps).toLocaleString()}
+                          {/* {new Date(item?.end_timestamps).toLocaleString()} */}
+                          <CountdownTimer startTimestamp={testStartTimestamp} />
+                          |
+                          <CountdownTimer startTimestamp={item?.start_timestamps} />
                         </td>
                       </>
                     ) :
