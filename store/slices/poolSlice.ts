@@ -43,6 +43,7 @@ const poolSlice = createSlice({
       })
       .addCase(fetchPool.rejected, (state, action) => {
         state.loading = false;
+        state.pool = [];
         state.error = action.payload || 'Failed to fetch pool';
       });
   },
