@@ -44,28 +44,30 @@ const OrdersPanel: React.FC = () => {
     const token = typeof window !== 'undefined' ? localStorage?.getItem("token") : null;
     if (token && isConnected) {
       dispatch(fetchOrders());
-      dispatch(fetchPool());
-    } else {
-      const interval = setInterval(() => {
-        const token = typeof window !== 'undefined' ? localStorage?.getItem("token") : null;
-        if (token && isConnected) {
-          dispatch(fetchOrders());
-          dispatch(fetchPool());
-          clearInterval(interval);
-        }
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
+    } 
   }, [isConnected, dispatch]);
+
+  useEffect(()=>{
+    const interval = setInterval(() => {
+      if (isConnected) {
+        dispatch(fetchPool());
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  },[isConnected])
 
   useEffect(() => {
     if (orders) setData(orders);
+  }, [orders]);
+
+  useEffect(() => {
     if (pool) setPoolData(pool);
-  }, [orders, pool]);
+  }, [pool]);
 
   const getActiveData = () => {
     if (!data) return [];
+    
     switch (activeTab) {
       case "Open Order":
         return data.filter((order) => order.status === "INPROGRESS");
@@ -82,8 +84,8 @@ const OrdersPanel: React.FC = () => {
     }
   };
 
-// console.log(poolData,'pool')
-  const getTabCount = (tab: string) => {
+
+const getTabCount = (tab: string) => {
     switch (tab) {
       case "Open Order":
         return data.filter((order) => order.status.toLocaleLowerCase() === "INPROGRESS".toLocaleLowerCase()).length;
@@ -152,6 +154,8 @@ const OrdersPanel: React.FC = () => {
                   <>
                     <th className="py-4 px-4 font-semibold w-1/4">Name</th>
                     <th className="py-4 px-4 font-semibold w-1/4">Pool Type</th>
+                    <th className="py-4 px-4 font-semibold w-1/4">Status</th>
+                    <th className="py-4 px-4 font-semibold w-1/4">Order Count</th>
                     <th className="py-4 px-4 font-semibold w-1/4">Start Time</th>
                     <th className="py-4 px-4 font-semibold w-1/4">End Time</th>
                   </>
@@ -173,6 +177,7 @@ const OrdersPanel: React.FC = () => {
                 }
               </tr>
             </thead>
+            
             <tbody>
               {getActiveData().length > 0 ? (
                 getActiveData().map((item) => (
@@ -184,6 +189,8 @@ const OrdersPanel: React.FC = () => {
                       <>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.pool_type}</td>
+                        <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.status}</td>
+                        <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.ordersCount}</td>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">
                           {new Date(item?.start_timestamps).toLocaleString()}
                         </td>

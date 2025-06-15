@@ -19,8 +19,8 @@ export const fetchPool = createAsyncThunk<[], void, { rejectValue: string }>(
   'fetchPool',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiGet<{ message: [] }>('/pool');
-      return response.message;
+      const response = await apiGet<{ pools: [] }>('/pool');
+      return response.pools;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch pool');
     }
