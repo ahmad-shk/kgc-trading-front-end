@@ -162,7 +162,7 @@ const testStartTimestamp = React.useMemo(() => {
                     <th className="py-4 px-4 font-semibold w-1/4">Status</th>
                     <th className="py-4 px-4 font-semibold w-1/4">Order Count</th>
                     <th className="py-4 px-4 font-semibold w-1/4">Start Time</th>
-                    <th className="py-4 px-4 font-semibold w-1/4">End Time</th>
+                    <th className="py-4 px-4 font-semibold w-1/4">Timer</th>
                   </>
                 ) : activeTab === "Funds" ?  (
                   <>
