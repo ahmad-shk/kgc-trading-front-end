@@ -33,7 +33,7 @@ const OrdersPanel: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
 
-  const [fundsData, setFundsData] = useState([{'symbol': 'USDT', "amount": '10' }, {'symbol': 'BNB', "amount": '20' }])
+  const [fundsData, setFundsData] = useState([{'symbol': 'USDT', "amount": '0' }, {'symbol': 'BNB', "amount": '0' }])
 
   useEffect(()=>{
      if(userBalance){
@@ -95,7 +95,7 @@ const getTabCount = (tab: string) => {
       case "Trade History":
         return data.filter((order) => order.status.toLocaleLowerCase() === "COMPLETE".toLocaleLowerCase()).length;
       case "Pool":
-        return poolData.filter((order) => order.status.toLocaleLowerCase() === "OPEN".toLocaleLowerCase()).length;
+        return poolData.length;
       case "Funds":
         return fundsData.length;
       default:
