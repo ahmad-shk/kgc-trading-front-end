@@ -139,7 +139,7 @@ export default function TradingInterface() {
       const hash = await buyHandler(payload)
       if (hash) {
         payload.transactionHash = hash
-        const response = await apiPost("/order", payload);
+        const response = await apiPost("/place_order", payload);
         return { success: true, data: response };
       } else {
         return { success: false, data: null };
