@@ -227,7 +227,7 @@ const testStartTimestamp = React.useMemo(() => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={activeTab === "Pool" ? 4 : 5} className="text-center text-[#848E9C] py-8">
+                  <td colSpan={activeTab === "Pool" ? 6 : 5} className="text-center text-[#848E9C] py-8">
                     No data found for this category.
                   </td>
                 </tr>
