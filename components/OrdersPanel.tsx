@@ -200,10 +200,7 @@ const testStartTimestamp = React.useMemo(() => {
                           {new Date(item?.start_timestamps).toLocaleString()}
                         </td>
                         <td className="py-4 px-4 text-[#EDB546] font-medium">
-                          {/* {new Date(item?.end_timestamps).toLocaleString()} */}
-                          <CountdownTimer startTimestamp={testStartTimestamp} />
-                          |
-                          <CountdownTimer startTimestamp={item?.start_timestamps} />
+                          <CountdownTimer startTimestamp={item?.status === 'OPEN' ? item?.start_timestamps : item?.process_timestamps} />
                         </td>
                       </>
                     ) :
