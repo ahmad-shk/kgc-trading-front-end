@@ -11,7 +11,7 @@ import { getAddress } from 'ethers';
 import { fetchOrders } from '@/store/slices/orderSlice';
 import { AppDispatch } from '@/store/store';
 import { log } from 'console';
-import { fetchPool } from '@/store/slices/poolSlice';
+import { fetchPool, fetchResultsByUser } from '@/store/slices/poolSlice';
 import { toast } from 'sonner';
 
 const WalletButton = () => {
@@ -54,6 +54,7 @@ const WalletButton = () => {
       dispatch(setUserData(user));
       localStorage.setItem('token', user.access_token);
       dispatch(fetchOrders());
+      dispatch(fetchResultsByUser());
       dispatch(fetchPool())
       toast.success("Wallet Connected successfully")
     } catch (err) {

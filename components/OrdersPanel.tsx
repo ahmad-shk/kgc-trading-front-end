@@ -41,32 +41,34 @@ const OrdersPanel: React.FC = () => {
     }
   }, [userBalance])
 
-  const fetch = async () => {
-    dispatch(fetchOrders());
-    dispatch(fetchResultsByUser());
-  };
-
-  // console.log('orderRresults--->',orderRresults)
-
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage?.getItem('token') : null;
 
-    if (!(token && isConnected)) return;
+    if (!(isConnected)) return;
 
+    const fetch = () => {
+      dispatch(fetchOrders());
+      dispatch(fetchResultsByUser());
+    };
+    fetch()
     const now = new Date();
-    const ms = now?.getMinutes() * 60 * 1000 + now.getSeconds() * 1000 + now?.getMilliseconds();
-    const msUntilNext5Min = (5 - (now?.getMinutes() % 5)) * 60 * 1000 - (ms % (5 * 60 * 1000));
+    const ms =
+      now.getMinutes() * 60 * 1000 +
+      now.getSeconds() * 1000 +
+      now.getMilliseconds();
 
-    const timeout = setTimeout(() => {
-      fetch(); // Initial fetch at next 5-min mark
-      const interval = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
+    const msUntilNext5Min =
+      (5 - (now.getMinutes() % 5)) * 60 * 1000 - (ms % (5 * 60 * 1000));
 
-      // Cleanup interval
-      return () => clearInterval(interval);
+    const timeoutId = setTimeout(() => {
+      fetch(); // Initial call at the next 5-minute mark
+      const intervalId = setInterval(fetch, 5 * 60 * 1000); // Every 5 minutes
+
+      // Return cleanup for interval
+      return () => clearInterval(intervalId);
     }, msUntilNext5Min);
 
-    // Cleanup timeout
-    return () => clearTimeout(timeout);
+    // Cleanup timeout (note: we can't clean up the interval here because it's inside the timeout)
+    return () => clearTimeout(timeoutId);
   }, [isConnected, dispatch]);
 
 
@@ -74,7 +76,7 @@ const OrdersPanel: React.FC = () => {
     const interval = setInterval(() => {
       if (isConnected) {
         dispatch(fetchPool());
-        dispatch(fetchResultsByUser());
+        // dispatch(fetchResultsByUser());
       }
     }, 5000);
 
