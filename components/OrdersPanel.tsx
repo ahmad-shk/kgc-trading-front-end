@@ -70,7 +70,7 @@ const OrdersPanel: React.FC = () => {
       fetch(); // First call exactly at next 5-minute mark
 
       intervalRef.current = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
-    }, msUntilNext5Min);
+    }, msUntilNext5Min+10000);
 
 
     // Cleanup both timeout and interval
