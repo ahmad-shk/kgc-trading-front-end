@@ -7,6 +7,8 @@ import { fetchOrders } from "@/store/slices/orderSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchPool, fetchResultsByUser } from "@/store/slices/poolSlice";
 import CountdownTimer from "./countdownTimer";
+import { currentBalance } from "@/config/Web3Controller";
+import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice";
 
 interface Order {
   _id: string;
@@ -25,7 +27,7 @@ const OrdersPanel: React.FC = () => {
   const { userBalance } = useSelector((state: any) => state.binance);
   const { orders } = useSelector((state: RootState) => state.order);
   const { pool, orderRresults } = useSelector((state: RootState) => state.pool);
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { open } = useAppKit();
   const [data, setData] = useState<Order[]>([]);
   const [poolData, setPoolData] = useState<Order[]>([]);
@@ -51,37 +53,49 @@ const OrdersPanel: React.FC = () => {
     };
     fetch()
     const now = new Date();
-    const ms =
+    const msPastHour =
       now.getMinutes() * 60 * 1000 +
       now.getSeconds() * 1000 +
       now.getMilliseconds();
 
-    const msUntilNext5Min =
-      (5 - (now.getMinutes() % 5)) * 60 * 1000 - (ms % (5 * 60 * 1000));
+    // const msUntilNext5Min = (5 - (now.getMinutes() % 5)) * 60 * 1000 - (ms % (5 * 60 * 1000));
+    const msUntilNext5Min = (5 * 60 * 1000) - (msPastHour % (5 * 60 * 1000));
 
     const timeoutId = setTimeout(() => {
-      fetch(); // Initial call at the next 5-minute mark
-      const intervalId = setInterval(fetch, 5 * 60 * 1000); // Every 5 minutes
+      fetch(); // First call exactly at next 5-minute mark
 
-      // Return cleanup for interval
-      return () => clearInterval(intervalId);
+      intervalId = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
     }, msUntilNext5Min);
 
-    // Cleanup timeout (note: we can't clean up the interval here because it's inside the timeout)
-    return () => clearTimeout(timeoutId);
+    let intervalId: NodeJS.Timeout;
+
+    // Cleanup both timeout and interval
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+
   }, [isConnected, dispatch]);
 
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isConnected) {
-        dispatch(fetchPool());
-        // dispatch(fetchResultsByUser());
-      }
-    }, 5000);
 
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    // Exit early if not connected or no token
+    if (!isConnected || !token) return;
+
+    // Run immediately
+    dispatch(fetchPool());
+    // Start polling every 10 seconds
+    const interval = setInterval(() => {
+      dispatch(fetchPool());
+    }, 10000);
+
+    // Cleanup: stop polling when disconnected or on component unmount
     return () => clearInterval(interval);
-  }, [isConnected])
+  }, [isConnected, dispatch]);
 
   useEffect(() => {
     if (orders) setData(orders);

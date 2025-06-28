@@ -14,9 +14,12 @@ import { log } from 'console';
 import { fetchPool, fetchResultsByUser } from '@/store/slices/poolSlice';
 import { toast } from 'sonner';
 
+
 const WalletButton = () => {
   const { open } = useAppKit();
   const { isConnected, address } = useAccount();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
   const { disconnect } = useDisconnect();
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
@@ -34,16 +37,11 @@ const WalletButton = () => {
   }, [address]);
 
   useEffect(() => {
-    console.log("lognnnnn")
-    if (isConnected 
-      // && prevAddress == null
-    ) {
+    if (isConnected) {
       login(); // Only login AFTER successful connection
     }
-    if (!isConnected) {
-      logout();
-    }
   }, [isConnected]);
+
 
   const login = async () => {
     try {
@@ -51,47 +49,41 @@ const WalletButton = () => {
       const user = await apiPost('/auth/login', {
         walletAddress: checksummed
       });
+
       dispatch(setUserData(user));
       localStorage.setItem('token', user.access_token);
       dispatch(fetchOrders());
       dispatch(fetchResultsByUser());
-      dispatch(fetchPool())
-      toast.success("Wallet Connected successfully")
+      dispatch(fetchPool());
+
+      // Start polling every 10 seconds
+      if (intervalRef.current) clearInterval(intervalRef.current); // prevent multiple intervals
+      intervalRef.current = setInterval(() => {
+        dispatch(fetchPool());
+      }, 10000); // 10000ms = 10s
+
+      toast.success("Wallet Connected successfully");
     } catch (err) {
-      logout();
-      createAcount();
       console.error("Login failed:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const createAcount = async () => {
-    try {
-      setLoading(true);
-      const user = await apiPost('/auth/account', {
-        walletAddress: checksummed
-      });
-      dispatch(setUserData(user));
-      localStorage.setItem('token', user.access_token);
-      dispatch(fetchOrders());
-      dispatch(fetchPool())
-      login();
-    } catch (err) {
-      logout();
-      console.error("Cretae account failed:", err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (!isConnected) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null; // ✅ Clear the reference too!
+      }
     }
-  };
-  const logout = async () => {
-    // setLoading(true);
-    // token clear from localStorage or axios
-    localStorage.removeItem('token');
-    axiosInstance.defaults.headers.common['Authorization'] = '';
-    dispatch(clearUserData());
-    // toast.error("Logout success")
-  }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isConnected]);
 
   const handleLoginClick = async () => {
     try {
@@ -108,7 +100,10 @@ const WalletButton = () => {
     <div>
       {isConnected ? (
         <button
-          onClick={() => disconnect()}
+          onClick={() => {
+            localStorage.clear()
+            disconnect()
+          }}
           className="bg-[#edb546] hover:bg-[#edb546]/90 text-black font-medium px-6 py-2 rounded-full text-sm border-2 border-[#edb546]"
         >
           Logout

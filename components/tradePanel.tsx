@@ -17,6 +17,8 @@ import { BrowserProvider, Contract, ethers, JsonRpcProvider, Interface } from "e
 import { Eip1193Provider } from 'ethers/providers'; // for ethers v6+
 import { useAppKitProvider } from "@reown/appkit/react";
 import { useAccount } from "@/config/context/AccountContext"
+import { currentBalance } from "@/config/Web3Controller"
+import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice"
 
 interface TradePayload {
   symbol: string;
@@ -43,7 +45,7 @@ interface OrderPayload {
 export default function TradingInterface() {
   const dispatch = useDispatch<AppDispatch>();
   const { walletProvider } = useAppKitProvider('eip155')
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const { userBalance } = useSelector((state: any) => state.binance);
   const balance = userBalance?.usdt ?? '0';
@@ -194,12 +196,18 @@ export default function TradingInterface() {
   const handleButtonClick = async (payload: any) => {
     const result = await submitOrder(payload);
     if (result.success) {
+      getBalance()
       toast.success("Order created successfully")
     } else {
       toast.error(result?.message)
     }
 
   };
+
+  const getBalance = async () => {
+    const balances = await currentBalance(address) as balanceInnterface;
+    dispatch(setUserBalance(balances))
+  }
 
   const handleShortClick = async (payload: any) => {
     const result = await submitOrder(payload);
