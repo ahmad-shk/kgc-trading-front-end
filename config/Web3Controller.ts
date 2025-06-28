@@ -30,7 +30,6 @@ export const currentBalanceUSDT = async (address: any) => {
 
 export const currentBalance = async (address: any) => {
     try {
-      console.log('thererere====>address')
       const web3 = initializeWeb3(); // Must return a valid Web3 instance
   
       // Get native BNB balance (18 decimals)

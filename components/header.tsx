@@ -44,7 +44,6 @@ export default function Header() {
   const { address, isConnected } = useAccount();
   useEffect(() => {
     if (isConnected) {
-      console.log('thererere====>address',address)
       getBalance()
     }
   }, [isConnected])
@@ -52,14 +51,10 @@ export default function Header() {
   const getBalance = async () => {
 
     try{
-
-      console.log('thererere====>address')
       const balances = await currentBalance(address) as balanceInnterface;
-      console.log('thererere====>address',balances)
       dispatch(setUserBalance(balances))
     }
     catch(e){
-      console.log('thererere====>address error',e)
       console.log('ERROR::',e)
     }
 

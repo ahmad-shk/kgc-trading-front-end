@@ -1,7 +1,7 @@
 "use client";
 import { useAccount } from "@/config/context/AccountContext";
 import { useAppKit } from "@reown/appkit/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "@/store/slices/orderSlice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -25,6 +25,8 @@ const tabs = ["Open Order", "Order History", "Trade History", "Pool", "Funds"];
 
 const OrdersPanel: React.FC = () => {
   const { userBalance } = useSelector((state: any) => state.binance);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const { orders } = useSelector((state: RootState) => state.order);
   const { pool, orderRresults } = useSelector((state: RootState) => state.pool);
   const { isConnected, address } = useAccount();
@@ -43,8 +45,8 @@ const OrdersPanel: React.FC = () => {
     }
   }, [userBalance])
 
-  useEffect(() => {
 
+  useEffect(() => {
     if (!(isConnected)) return;
 
     const fetch = () => {
@@ -60,19 +62,21 @@ const OrdersPanel: React.FC = () => {
 
     // const msUntilNext5Min = (5 - (now.getMinutes() % 5)) * 60 * 1000 - (ms % (5 * 60 * 1000));
     const msUntilNext5Min = (5 * 60 * 1000) - (msPastHour % (5 * 60 * 1000));
+    // Calculate the exact next run time
+    const nextRun = new Date(Date.now() + msUntilNext5Min);
+    console.log("Next fetch scheduled at:", nextRun.toLocaleTimeString());
 
     const timeoutId = setTimeout(() => {
       fetch(); // First call exactly at next 5-minute mark
 
-      intervalId = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
+      intervalRef.current = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
     }, msUntilNext5Min);
 
-    let intervalId: NodeJS.Timeout;
 
     // Cleanup both timeout and interval
     return () => {
       clearTimeout(timeoutId);
-      if (intervalId) clearInterval(intervalId);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
 
   }, [isConnected, dispatch]);
