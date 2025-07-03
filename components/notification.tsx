@@ -158,13 +158,7 @@ export default function NotificationComponent() {
               recentNotifications.map((notification, index) => {
                 const { icon, bg, label } = notificationStyles[notification.status];
                 return (
-                  <div
-                    onClick={()=>{
-                      window.open(`https://testnet.bscscan.com/tx/${notification.createdBy}`, "_blank", "noopener,noreferrer");
-                    }}
-                    key={index}
-                    className="flex gap-2 px-3 py-2 items-start border-b border-[#2A2D3A] hover:bg-[#1F212A]"
-                  >
+                  <div key={index}className="flex gap-2 px-3 py-2 items-start border-b border-[#2A2D3A] hover:bg-[#1F212A]">
                     <div
                       className="p-2 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: bg }}
