@@ -110,24 +110,52 @@ const OrdersPanel: React.FC = () => {
     if (pool) setPoolData(pool);
   }, [pool]);
 
+
+
   const getActiveData = () => {
     if (!data) return [];
 
+    const sortByDate = <T extends { createdAt?: string }>(arr: T[]): T[] => {
+      return [...arr].sort(
+        (a, b) =>
+          new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+      );
+    };
+
     switch (activeTab) {
-      case "Open Order":
-        return data.filter((order) => (order.status === "PENDING" || order.status === "PROCESSING"));
-      case "Order History":
-        return data.filter((order) => (order.status === "LOSER" || order.status === "WINNER" || order.status === "DRAW"));
+      case "Open Order": {
+        const openOrders = data.filter(
+          (order) =>
+            order.status === "PENDING" || order.status === "PROCESSING"
+        );
+        return sortByDate(openOrders);
+      }
+
+      case "Order History": {
+        const orderHistory = data.filter(
+          (order) =>
+            order.status === "LOSER" || order.status === "WINNER" || order.status === "DRAW"
+        );
+        return sortByDate(orderHistory);
+      }
+
       case "Trade History":
+        // Assuming orderRresults does NOT have createdAt, return as is
         return orderRresults;
+
       case "Pool":
-        return poolData
+        // poolData has no createdAt field
+        return poolData;
+
       case "Funds":
+        // fundsData has no createdAt field
         return fundsData;
+
       default:
-        return data;
+        return sortByDate(data);
     }
   };
+
 
 
   // console.log('orderRresults-->', orderRresults)
