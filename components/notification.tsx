@@ -96,10 +96,10 @@ export default function NotificationComponent() {
   const [data, setData] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const [recentNotifications, setrecentNotifications] = useState<Notification[]>([]);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-
   useEffect(() => {
     if (orderRresults?.length > 0) {
       setData(orderRresults);
