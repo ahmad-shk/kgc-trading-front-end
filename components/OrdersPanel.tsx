@@ -70,7 +70,7 @@ const OrdersPanel: React.FC = () => {
       fetch(); // First call exactly at next 5-minute mark
 
       intervalRef.current = setInterval(fetch, 5 * 60 * 1000); // Then every 5 min
-    }, msUntilNext5Min+10000);
+    }, msUntilNext5Min + 10000);
 
 
     // Cleanup both timeout and interval
@@ -170,7 +170,7 @@ const OrdersPanel: React.FC = () => {
 
   return (
     <div className="bg-[#181A20] text-white p-4 sm:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
-      <div className="flex flex-wrap gap-4 sm:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4">
+      <div className="flex flex-wrap gap-4 sm:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4 ml- sm:ml-">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -179,20 +179,26 @@ const OrdersPanel: React.FC = () => {
               setActiveTab((prev) => (prev === tab ? "" : tab));
             }}
             disabled={!isConnected}
-            className={`relative bg-none border-none text-sm sm:text-base pb-2
-              ${activeTab === tab
-                ? "text-[#EDB546] font-bold after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#f0b90b]"
-                : "text-[#848E9C]"} 
-              cursor-pointer disabled:cursor-not-allowed`}
+            className={`relative px-2 sm:px-3 py-2 text-smm sm:text-base font-medium transition-all duration-300
+    ${activeTab === tab
+                ? "text-[#EDB546]"
+                : "text-[#848E9C] hover:text-white"} 
+    cursor-pointer disabled:cursor-not-allowed`}
           >
-            {`${tab} (${getTabCount(tab)})`}
+            <span className="relative">
+              {`${tab} (${getTabCount(tab)})`}
+              <span
+                className={`absolute -bottom-1 left-0 h-[2px] w-full transition-all duration-300
+        ${activeTab === tab ? "bg-[#EDB546]" : "bg-transparent group-hover:bg-[#EDB546]"}`}
+              ></span>
+            </span>
           </button>
         ))}
       </div>
 
       {!isConnected ? (
         <div className="flex item?s-center justify-center h-full p-8 sm:p-20 text-center text-[#EDB546]">
-          <p className="text-xs sm:text-sm">
+          <p className="text-xs sm:text-smm">
             <span className="underline cursor-pointer" onClick={() => open()}>
               Log in
             </span>
@@ -203,178 +209,181 @@ const OrdersPanel: React.FC = () => {
         </div>
       ) : (
         <div className="max-h-[400px] overflow-y-auto">
+          {getActiveData().length > 0 ? (
+            <table className="w-full table-fixed">
+              <thead>
 
-          <table className="w-full table-fixed">
-            <thead>
-
-              <tr className="text-[#EDB546] text-sm sticky top-0 bg-[#181A20] z-10">
-                {
-                  activeTab === "Open Order" ? (
-                    <>
-                      <th className="py-4 px-4 font-semibold w-1/5">Order Id</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Name</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Leverage</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Order Type</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Status</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Transaction Hash</th>
-                      <th className="py-4 px-4 font-semibold w-1/5">Created At</th>
-                    </>
-                  ) :
-                    activeTab === "Order History" ? (
+                <tr className="text-[#EDB546] text-base font-semibold sticky top-0 bg-[#181A20] z-10">
+                  {
+                    activeTab === "Open Order" ? (
                       <>
-                        <th className="py-4 px-4 font-semibold w-1/5">Order Id</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Name</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Leverage</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Order Type</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Status</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Transaction Hash</th>
-                        <th className="py-4 px-4 font-semibold w-1/5">Created At</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Leverage</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Status</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
+                        <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
                       </>
                     ) :
-
-                      activeTab === "Trade History" ? (
+                      activeTab === "Order History" ? (
                         <>
-                          <th className="py-4 px-4 font-semibold w-1/5">Order Id</th>
-                          <th className="py-4 px-4 font-semibold w-1/5">Name</th>
-                          <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
-                          <th className="py-4 px-4 font-semibold w-1/5">Claimable Amount</th>
-                          <th className="py-4 px-4 font-semibold w-1/5">Status</th>
-                          <th className="py-4 px-4 font-semibold w-1/5">Action</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Leverage</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Status</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
                         </>
                       ) :
 
-                        activeTab === "Pool" ? (
+                        activeTab === "Trade History" ? (
                           <>
-                            <th className="py-4 px-4 font-semibold w-1/4">Name</th>
-                            <th className="py-4 px-4 font-semibold w-1/4">Pool Type</th>
-                            <th className="py-4 px-4 font-semibold w-1/4">Status</th>
-                            <th className="py-4 px-4 font-semibold w-1/4">Order Count</th>
-                            <th className="py-4 px-4 font-semibold w-1/4">Start Time</th>
-                            <th className="py-4 px-4 font-semibold w-1/4">Timer</th>
-                          </>
-                        ) : activeTab === "Funds" ? (
-                          <>
-                            <th className="py-4 px-4 font-semibold w-1/5">Name</th>
-                            <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Claimable Amount</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Status</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Action</th>
                           </>
                         ) :
-                          (
+
+                          activeTab === "Pool" ? (
                             <>
-                              <th className="py-4 px-4 font-semibold w-1/5">Name</th>
-                              <th className="py-4 px-4 font-semibold w-1/5">Amount</th>
-                              <th className="py-4 px-4 font-semibold w-1/5">Leverage</th>
-                              <th className="py-4 px-4 font-semibold w-1/5">Order Type</th>
-                              <th className="py-4 px-4 font-semibold w-1/5">Created At</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Name</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Pool Type</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Status</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Order Count</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Start Time</th>
+                              <th className="py-2 px-2 font-semibold w-1/4">Timer</th>
                             </>
-                          )
-                }
-              </tr>
-            </thead>
+                          ) : activeTab === "Funds" ? (
+                            <>
+                              <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                              <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
+                            </>
+                          ) :
+                            (
+                              <>
+                                <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                                <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
+                                <th className="py-2 px-2 font-semibold w-1/5">Leverage</th>
+                                <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
+                                <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
+                              </>
+                            )
+                  }
+                </tr>
+              </thead>
 
-            <tbody>
-              {getActiveData().length > 0 ? (
-                getActiveData().map((item: any) => (
-                  <tr
-                    key={item?._id}
-                    className="border-b border-[#2b2d32] last:border-0 cursor-pointer"
-                  >
-                    {
-                      activeTab === "Open Order" ? (
-                        <>
-                          <td onClick={() => handleCopy(item?._id)} className="py-4 px-4 text-[#EDB546] font-medium cursor-pointer">{`${item?._id.slice(0, 8)}...`}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.leverage}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.order_type}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.status}</td>
-                          <td onClick={() => handleCopy(item?.transactionHash)} className="py-4 px-4 text-[#EDB546] font-medium cursor-pointer">{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
-                          <td className="py-4 px-4 text-[#EDB546] font-medium">
-                            {new Date(item?.createdAt).toLocaleString()}
-                          </td>
-                        </>
-                      ) :
-
-                        activeTab === "Order History" ? (
+              <tbody>
+                {getActiveData().length > 0 ? (
+                  getActiveData().map((item: any, index: number) => (
+                    <tr
+                      key={item?._id}
+                      className="border-b border-[#2b2d32] last:border-0 cursor-pointer"
+                    >
+                      {
+                        activeTab === "Open Order" ? (
                           <>
-                            <td onClick={() => handleCopy(item?._id)} className="py-4 px-4 text-[#EDB546] font-medium cursor-pointer">{`${item?._id.slice(0, 8)}...`}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.leverage}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.order_type}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.status}</td>
-                            <td onClick={() => handleCopy(item?.transactionHash)} className="py-4 px-4 text-[#EDB546] font-medium cursor-pointer">{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
-                            <td className="py-4 px-4 text-[#EDB546] font-medium">
+                            <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?._id.slice(0, 8)}...`}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
+                            <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                               {new Date(item?.createdAt).toLocaleString()}
                             </td>
                           </>
                         ) :
-                          activeTab === "Trade History" ? (
+
+                          activeTab === "Order History" ? (
                             <>
-                              <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.order_id}</td>
-                              <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                              <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
-                              <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.calimable_amount}</td>
-                              <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.status}</td>
-                              <td className="py-4 px-4">
-                                <button
-                                  // onClick={() => handleAction(item)}
-                                  className="bg-[#edb546] hover:bg-[#edb546]/90 text-black font-medium px-6 py-2 rounded-full text-sm border-2 border-[#edb546]"
-                                >
-                                  {(item?.isClaimed && !item?.isExpired) ? 'Clameable' : "Already Clamed"}
-                                </button>
+                              <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?._id.slice(0, 8)}...`}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
+                              <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                {new Date(item?.createdAt).toLocaleString()}
                               </td>
                             </>
                           ) :
-
-                            activeTab === "Pool" ? (
+                            activeTab === "Trade History" ? (
                               <>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.pool_type}</td>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.status}</td>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.ordersCount}</td>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">
-                                  {new Date(item?.start_timestamps).toLocaleString()}
-                                </td>
-                                <td className="py-4 px-4 text-[#EDB546] font-medium">
-                                  <CountdownTimer startTimestamp={item?.status === 'OPEN' ? item?.start_timestamps : item?.process_timestamps} />
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_id}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.calimable_amount}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
+                                <td className="py-2 px-2">
+                                  <button
+                                    // onClick={() => handleAction(item)}
+                                    className="bg-[#edb546] hover:bg-[#edb546]/90 text-black font-medium px-6 py-2 rounded-full text-smm border-2 border-[#edb546]"
+                                  >
+                                    {(item?.isClaimed && !item?.isExpired) ? 'Clameable' : "Already Clamed"}
+                                  </button>
                                 </td>
                               </>
                             ) :
 
-                              activeTab === "Funds" ? (
+                              activeTab === "Pool" ? (
                                 <>
-                                  <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                                  <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.pool_type}</td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.ordersCount}</td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                    {new Date(item?.start_timestamps).toLocaleString()}
+                                  </td>
+                                  <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                    <CountdownTimer startTimestamp={item?.status === 'OPEN' ? item?.start_timestamps : item?.process_timestamps} />
+                                  </td>
                                 </>
                               ) :
 
-                                (
+                                activeTab === "Funds" ? (
                                   <>
-                                    <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.symbol}</td>
-                                    <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.amount}</td>
-                                    <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.leverage}</td>
-                                    <td className="py-4 px-4 text-[#EDB546] font-medium">{item?.order_type}</td>
-                                    <td className="py-4 px-4 text-[#EDB546] font-medium">
-                                      {new Date(item?.createdAt).toLocaleString()}
-                                    </td>
+                                    <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                                    <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                                   </>
-                                )}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={activeTab === "Pool" ? 6 : 5} className="text-center text-[#848E9C] py-8">
-                    No data found for this category.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                                ) :
 
+                                  (
+                                    <>
+                                      <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                                      <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
+                                      <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
+                                      <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
+                                      <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                        {new Date(item?.createdAt).toLocaleString()}
+                                      </td>
+                                    </>
+                                  )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={activeTab === "Pool" ? 6 : 5} className="text-center text-[#848E9C] py-8">
+                      No data found for this category.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-center text-[#848E9C] py-8"> No data found for this category.</p>
+          )}
         </div>
-      )}
+      )
+      }
     </div>
   );
 };
