@@ -9,6 +9,7 @@ import { fetchPool, fetchResultsByUser } from "@/store/slices/poolSlice";
 import CountdownTimer from "./countdownTimer";
 import { currentBalance } from "@/config/Web3Controller";
 import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice";
+import { redirect } from "next/dist/server/api-utils";
 
 interface Order {
   _id: string;
@@ -168,6 +169,15 @@ const OrdersPanel: React.FC = () => {
       console.error('Failed to copy hash:', err);
     }
   };
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="bg-[#181A20] text-white p-4 sm:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
@@ -338,7 +348,7 @@ const OrdersPanel: React.FC = () => {
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.profit_loss}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                                 {/* <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>test</td> */}
-                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 12)}...${item?.transactionHash.slice(-12)}`}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}  onClick={()=>{window.open(`https://testnet.bscscan.com/tx/${item?.transactionHash}`, "_blank", "noopener,noreferrer");}} >{`${item?.transactionHash.slice(0, 12)}...${item?.transactionHash.slice(-12)}`}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                                   {new Date(item?.createdAt).toLocaleString()}
                                 </td>
