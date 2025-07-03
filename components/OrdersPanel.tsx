@@ -129,6 +129,7 @@ const OrdersPanel: React.FC = () => {
   };
 
 
+  // console.log('orderRresults-->', orderRresults)
   const getTabCount = (tab: string) => {
     switch (tab) {
       case "Open Order":
@@ -148,7 +149,7 @@ const OrdersPanel: React.FC = () => {
 
   useEffect(() => {
     if (!isConnected) {
-      setActiveTab("");
+      // setActiveTab("");
       setData([]);
       setPoolData([]);
     }
@@ -231,10 +232,10 @@ const OrdersPanel: React.FC = () => {
                         <>
                           <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Status</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Leverage</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
-                          <th className="py-2 px-2 font-semibold w-1/5">Status</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
                         </>
@@ -244,10 +245,12 @@ const OrdersPanel: React.FC = () => {
                           <>
                             <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Name</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Status</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Claimable Amount</th>
-                            <th className="py-2 px-2 font-semibold w-1/5">Status</th>
-                            <th className="py-2 px-2 font-semibold w-1/5">Action</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
+                            {/* <th className="py-2 px-2 font-semibold w-1/5">Action</th> */}
                           </>
                         ) :
 
@@ -304,13 +307,21 @@ const OrdersPanel: React.FC = () => {
 
                           activeTab === "Order History" ? (
                             <>
-                              <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?._id.slice(0, 8)}...`}</td>
+                              <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                {`${item
+                                  ?._id
+                                  // .slice(0, 8)
+                                  }
+                                `
+                                  // ...
+                                }
+                              </td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
-                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
-                              <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
+                              <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-10)}`}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                                 {new Date(item?.createdAt).toLocaleString()}
                               </td>
@@ -320,16 +331,13 @@ const OrdersPanel: React.FC = () => {
                               <>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_id}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.calimable_amount}</td>
-                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
-                                <td className="py-2 px-2">
-                                  <button
-                                    // onClick={() => handleAction(item)}
-                                    className="bg-[#edb546] hover:bg-[#edb546]/90 text-black font-medium px-6 py-2 rounded-full text-smm border-2 border-[#edb546]"
-                                  >
-                                    {(item?.isClaimed && !item?.isExpired) ? 'Clameable' : "Already Clamed"}
-                                  </button>
+                                {/* <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>test</td> */}
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.createdBy.slice(0, 10)}...${item?.createdBy.slice(-10)}`}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                                  {new Date(item?.createdAt).toLocaleString()}
                                 </td>
                               </>
                             ) :
