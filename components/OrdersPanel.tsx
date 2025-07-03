@@ -303,14 +303,21 @@ const OrdersPanel: React.FC = () => {
                       {
                         activeTab === "Open Order" ? (
                           <>
-                            <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?._id.slice(0, 8)}...`}</td>
+                            <td onClick={() => handleCopy(item?._id)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
+                              {`${item
+                                ?._id
+                                // .slice(0, 8)
+                                }
+                                `
+                                // ...
+                              }
+                            </td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
-                            
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
-                            <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}  >{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
+                            <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`} onClick={() => { item?.transactionHash ? window.open(`https://testnet.bscscan.com/tx/${item?.transactionHash}`, "_blank", "noopener,noreferrer") : "" }} >{item?.transactionHash ? `${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-8)}` : "Claim"}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                               {new Date(item?.createdAt).toLocaleString()}
                             </td>
@@ -333,7 +340,7 @@ const OrdersPanel: React.FC = () => {
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
-                              <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-10)}`}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`} onClick={() => { item?.transactionHash ? window.open(`https://testnet.bscscan.com/tx/${item?.transactionHash}`, "_blank", "noopener,noreferrer") : "" }} >{item?.transactionHash ? `${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-8)}` : "Claim"}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                                 {new Date(item?.createdAt).toLocaleString()}
                               </td>
@@ -348,7 +355,7 @@ const OrdersPanel: React.FC = () => {
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.profit_loss}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                                 {/* <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>test</td> */}
-                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}  onClick={()=>{ item?.transactionHash? window.open(`https://testnet.bscscan.com/tx/${item?.transactionHash}`, "_blank", "noopener,noreferrer"):""}} >{item?.transactionHash ? `${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-8)}`:"Claim"}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`} onClick={() => { item?.transactionHash ? window.open(`https://testnet.bscscan.com/tx/${item?.transactionHash}`, "_blank", "noopener,noreferrer") : "" }} >{item?.transactionHash ? `${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-8)}` : "Claim"}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                                   {new Date(item?.createdAt).toLocaleString()}
                                 </td>
