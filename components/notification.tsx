@@ -14,65 +14,70 @@ interface Order {
   status:
     | "LOSER"
     | "WINNER"
-    | "DRAW"
-    | "PROCESSING"
-    | "INPROGRESS"
-    | "Order History"
-    | "Trade History"
-    | "PENDING"
-    | "COMPLETE"
-    | "OPEN";
   createdAt: string;
   transactionHash?: string;
 }
 
 interface Notification {
-  id: number;
-  type: "win" | "loss";
-  title: string;
-  unread: boolean;
+  _id: string;
+  pool_id: string;
+  pool_porcessing_id: string;
+  order_id: string;
+  symbol: string;
+  user_id: string;
+  walletAddress: string;
+  amount: number;
+  calimable_amount: number;
+  profit_loss: number;
+  isClaimed: boolean;
+  expiry_time: number;
+  isExpired: boolean;
+  status: "WINNER" | "LOSER";
+  createdBy: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 const now = new Date();
-const notifications: Notification[] = [
-  {
-    id: 1,
-    type: "win",
-    title: "EUR/USD +$245",
-    unread: true,
-    createdAt: new Date(now.getTime() - 2 * 60 * 1000).toISOString(), // 2 mins ago
-  },
-  {
-    id: 2,
-    type: "loss",
-    title: "GBP/JPY -$89",
-    unread: true,
-    createdAt: new Date(now.getTime() - 15 * 60 * 1000).toISOString(), // 15 mins ago
-  },
-  {
-    id: 3,
-    type: "win",
-    title: "BTC/USD +$1.2k",
-    unread: false,
-    createdAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(), // 1 hour ago
-  },
-  {
-    id: 4,
-    type: "loss",
-    title: "ETH/USD -$340",
-    unread: false,
-    createdAt: new Date(now.getTime() - 3 * 60 * 1000).toISOString(), // 3 mins ago
-  },
-];
+// const notifications: Notification[] = 
+// [
+//   {
+//     id: 1,
+//     type: "win",
+//     title: "EUR/USD +$245",
+//     unread: true,
+//     createdAt: new Date(now.getTime() - 2 * 60 * 1000).toISOString(), // 2 mins ago
+//   },
+//   {
+//     id: 2,
+//     type: "loss",
+//     title: "GBP/JPY -$89",
+//     unread: true,
+//     createdAt: new Date(now.getTime() - 15 * 60 * 1000).toISOString(), // 15 mins ago
+//   },
+//   {
+//     id: 3,
+//     type: "win",
+//     title: "BTC/USD +$1.2k",
+//     unread: false,
+//     createdAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(), // 1 hour ago
+//   },
+//   {
+//     id: 4,
+//     type: "loss",
+//     title: "ETH/USD -$340",
+//     unread: false,
+//     createdAt: new Date(now.getTime() - 3 * 60 * 1000).toISOString(), // 3 mins ago
+//   },
+// ];
 
 const notificationStyles = {
-  win: {
+  'WINNER': {
     icon: <TrendingUp className="w-4 h-4 text-[#181A20]" />,
     bg: "#EDB546",
     label: "Win",
   },
-  loss: {
+  'LOSER': {
     icon: <TrendingDown className="w-4 h-4 text-[#181A20]" />,
     bg: "#F87171",
     label: "Loss",
@@ -85,20 +90,26 @@ function getTimeAgo(createdAt: string): string {
 }
 
 export default function NotificationComponent() {
-  const { orderRresults } = useSelector((state: RootState) => state.pool);
-  const [data, setData] = useState<Order[]>([]);
+  const { orderRresults } = useSelector((state: RootState) => state.pool) as {
+    orderRresults: Notification[];
+  };
+  const [data, setData] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
+  const [recentNotifications, setrecentNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-  const recentNotifications = notifications.filter(
-    (n) => new Date(n.createdAt).getTime() >= fiveMinutesAgo
-  );
-  const unreadCount = recentNotifications.length;
 
   useEffect(() => {
     if (orderRresults?.length > 0) {
       setData(orderRresults);
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      
+      const recentNotifications = orderRresults.filter(
+        (n) => new Date(n?.createdAt).getTime() >= oneMonthAgo.getTime()
+      );
+      setrecentNotifications(recentNotifications)
     }
   }, [orderRresults]);
 
@@ -119,9 +130,9 @@ export default function NotificationComponent() {
         className="relative p-2 rounded-full bg-[#edb546] hover:bg-[#edb546]/90"
       >
         <Bell className="w-5 h-5 text-black" />
-        {unreadCount > 0 && (
+        {recentNotifications.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-            {unreadCount}
+            {recentNotifications.length}
           </span>
         )}
       </button>
@@ -133,9 +144,9 @@ export default function NotificationComponent() {
         >
           <div className="border-b px-3 py-1 text-sm font-semibold flex justify-between items-center text-white">
             Notifications
-            {unreadCount > 0 && (
+            {recentNotifications.length > 0 && (
               <span className="text-xs bg-[#edb546] text-black px-2 py-0.5 rounded">
-                {unreadCount} new
+                {recentNotifications.length} new
               </span>
             )}
           </div>
@@ -145,9 +156,12 @@ export default function NotificationComponent() {
               <div className="px-3 py-4 text-gray-400 text-center">No recent notifications</div>
             ) : (
               recentNotifications.map((notification, index) => {
-                const { icon, bg, label } = notificationStyles[notification.type];
+                const { icon, bg, label } = notificationStyles[notification.status];
                 return (
                   <div
+                    onClick={()=>{
+                      window.open(`https://testnet.bscscan.com/tx/${notification.createdBy}`, "_blank", "noopener,noreferrer");
+                    }}
                     key={index}
                     className="flex gap-2 px-3 py-2 items-start border-b border-[#2A2D3A] hover:bg-[#1F212A]"
                   >
@@ -159,7 +173,7 @@ export default function NotificationComponent() {
                     </div>
 
                     <div className="flex flex-col w-full text-white">
-                      <p className="text-sm">{notification.title}</p>
+                      <p className="text-sm">{notification.symbol}</p>
                       <div className="flex justify-between text-xs text-gray-400">
                         <span>{label}</span>
                         <span>{getTimeAgo(notification.createdAt)}</span>
