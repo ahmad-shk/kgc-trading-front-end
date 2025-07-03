@@ -232,10 +232,10 @@ const OrdersPanel: React.FC = () => {
                         <>
                           <th className="py-2 px-2 font-semibold w-1/5">Order Id</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Name</th>
-                          <th className="py-2 px-2 font-semibold w-1/5">Status</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Leverage</th>
-                          <th className="py-2 px-2 font-semibold w-1/5">Order Type</th>
+                          <th className="py-2 px-2 font-semibold w-1/5">Status</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
                           <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
                         </>
@@ -318,9 +318,10 @@ const OrdersPanel: React.FC = () => {
                               </td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
-                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.order_type}</td>
+                              <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                               <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 10)}...${item?.transactionHash.slice(-10)}`}</td>
                               <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                                 {new Date(item?.createdAt).toLocaleString()}
