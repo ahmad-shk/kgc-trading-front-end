@@ -247,6 +247,7 @@ const OrdersPanel: React.FC = () => {
                             <th className="py-2 px-2 font-semibold w-1/5">Name</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Amount</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Claimable Amount</th>
+                            <th className="py-2 px-2 font-semibold w-1/5">PnL</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Status</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Transaction Hash</th>
                             <th className="py-2 px-2 font-semibold w-1/5">Created At</th>
@@ -334,6 +335,7 @@ const OrdersPanel: React.FC = () => {
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.symbol}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.calimable_amount}</td>
+                                <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.profit_loss}</td>
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
                                 {/* <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>test</td> */}
                                 <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.createdBy.slice(0, 10)}...${item?.createdBy.slice(-10)}`}</td>
