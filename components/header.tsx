@@ -9,6 +9,7 @@ import { useAccount } from "@/config/context/AccountContext";
 import { useEffect } from "react";
 import { currentBalance, currentBalanceUSDT } from "@/config/Web3Controller";
 import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice";
+import NotificationComponent from "./notification";
 
 
 const tradingPairs = [
@@ -50,12 +51,12 @@ export default function Header() {
 
   const getBalance = async () => {
 
-    try{
+    try {
       const balances = await currentBalance(address) as balanceInnterface;
       dispatch(setUserBalance(balances))
     }
-    catch(e){
-      console.log('ERROR::',e)
+    catch (e) {
+      console.log('ERROR::', e)
     }
 
   }
@@ -99,10 +100,13 @@ export default function Header() {
             </Link>
           </nav>
         </div>
+        <div className="flex items-center gap-4">
+          <NotificationComponent />
 
-        {/* Right Side: Login Button */}
-        <WalletButton />
 
+          {/* Right Side: Login Button */}
+          <WalletButton />
+        </div>
       </div>
     </header>
   );
