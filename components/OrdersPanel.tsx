@@ -310,7 +310,7 @@ const OrdersPanel: React.FC = () => {
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.amount}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.leverage}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.status}</td>
-                            <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`}</td>
+                            <td onClick={() => handleCopy(item?.transactionHash)} className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>{item?.transactionHash?`${item?.transactionHash.slice(0, 6)}...${item?.transactionHash.slice(-4)}`:"....."}</td>
                             <td className={`py-2 px-2 ${index % 2 === 0 ? "text-[#EDB546]" : "text-[#d4b26f]"} text-sm font-medium`}>
                               {new Date(item?.createdAt).toLocaleString()}
                             </td>
