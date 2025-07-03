@@ -170,7 +170,7 @@ const OrdersPanel: React.FC = () => {
 
   return (
     <div className="bg-[#181A20] text-white p-4 sm:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
-      <div className="flex flex-wrap gap-4 sm:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4 ml- sm:ml-">
+      <div className="flex flex-wrap gap-4 sm:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4 ml-6 sm:ml-">
         {tabs.map((tab) => (
           <button
             key={tab}
