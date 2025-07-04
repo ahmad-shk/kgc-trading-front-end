@@ -49,9 +49,10 @@ export default function MarketTrades() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`relative flex justify-center
                   ${activeTab === tab.id
-                    ? "text-[#EDB546] before:content-[''] before:absolute before:bottom-0 before:h-[2px] before:w-[20px] before:bg-[#EDB546]"
+                    ? "  pb-2  text-[#EDB546] before:content-[''] before:absolute before:bottom-0 before:h-[2px] before:w-[20px] -before:bg-[#EDB546]"
                     : "text-[#8e8e8e]"
-                  } transition-colors duration-200`}
+                  } 
+                  transition-colors duration-200`}
               >
                 {tab.label}
               </button>
@@ -60,7 +61,7 @@ export default function MarketTrades() {
           )}
         </div>
 
-        <button className="text-[#8e8e8e] hover:text-white transition-colors duration-200">
+        <button className="text-[#8e8e8e] pb-2 hover:text-white transition-colors duration-200">
           <MoreHorizontal className="h-5 w-5" />
         </button>
       </div>
@@ -69,7 +70,7 @@ export default function MarketTrades() {
       <div className="border-b border-[#2B3139]" />
 
       {/* Table Header */}
-      <div className="py-2 px-4 flex justify-between text-[12px] font-semibold text-[#848E9C] -text-white/60">
+      <div className="py-2 px-2 flex justify-between text-[12px] font-semibold text-[#848E9C]">
         <div>{`Price (USDT)`}</div>
         <div className="w-[100px]">{`Amount (${teckerName})`}</div>
         <div>Time</div>
