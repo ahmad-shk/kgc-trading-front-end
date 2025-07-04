@@ -55,8 +55,8 @@ export default function TradingInterface() {
   const [loaderShort, setLoaderShort] = React.useState<boolean>(false);
   const symbol = useSelector((state: any) => state.binance.symbol);
   const { orderBook, currentPrice, lastPrice } = useOrderBook(symbol, 1000);
-  const [buyAmount, setBuyAmount] = useState<number>(0)
-  const [sellAmount, setSellAmount] = useState<number>(0)
+  const [buyAmount, setBuyAmount] = useState<number>()
+  const [sellAmount, setSellAmount] = useState<number>()
   const [buyPercentage, setBuyPercentage] = useState(5)
   const [sellPercentage, setSellPercentage] = useState(5)
   const [CurrencyType, setCurrencyType] = useState<string>("");
@@ -137,7 +137,7 @@ export default function TradingInterface() {
     if (!validation.success) return validation;
 
     try {
-      // payload.order_type === "LONG" ? setLoaderLong(true) : setLoaderShort(true)
+      payload.order_type === "LONG" ? setLoaderLong(true) : setLoaderShort(true)
       const hash = await buyHandler(payload)
       if (hash) {
         payload.transactionHash = hash
@@ -189,17 +189,21 @@ export default function TradingInterface() {
 
     } catch (error) {
       const erroObj = JSON.parse(JSON.stringify(error));
-      toast.error(erroObj.shortMessage)
+      if (erroObj.shortMessage)
+        toast.error(erroObj.shortMessage)
     }
   };
 
   const handleButtonClick = async (payload: any) => {
     const result = await submitOrder(payload);
+    //////////loader/////////////
     if (result.success) {
       getBalance()
+
       toast.success("Order created successfully")
     } else {
-      toast.error(result?.message)
+      if (result?.message)
+        toast.error(result?.message)
     }
 
   };
@@ -214,7 +218,8 @@ export default function TradingInterface() {
     if (result.success) {
       toast.success("Order created successfully")
     } else {
-      toast.error(result?.message)
+      if (result?.message)
+        toast.error(result?.message)
     }
   };
 
@@ -284,22 +289,22 @@ export default function TradingInterface() {
             <span className="text-[#848E9C]">{balance} USDT</span>
           </div>
           <div className="pb-8 flex justify-between">
-            <button className="text-[#848E9C] underline" onClick={(e)=>{
-              
-              setBuyAmount(balance-1)
-              setDataLong(balance-1, "Amount", "Long");
-            
+            <button className="text-[#848E9C] underline" onClick={(e) => {
+
+              setBuyAmount(balance - 1)
+              setDataLong(balance - 1, "Amount", "Long");
+
             }
-              }>Max Buy</button>
+            }>Max Buy</button>
             {/* <span className="text-[#848E9C]">-- {coinName}</span> */}
           </div>
           {/* Buy Button */}
           <button
-            disabled={!isConnected}
+            disabled={!isConnected || loaderLong || loaderShort}
             className="w-full rounded-xl bg-[#15b34c] py-3 text-center text-[14px] font-semibold text-white -text-[#848E9C] hover:bg-[#13a045]"
             onClick={() => handleButtonClick(payloadLong)}
           >
-            {loaderLong ? <DottedLoader size="sm" color="blue" overlay={false} /> : "Long"}
+            {loaderLong ? <DottedLoader size="sm" color="white" overlay={false} /> : "Long"}
           </button>
         </div>
         {/* Sell Short Section */}
@@ -357,18 +362,18 @@ export default function TradingInterface() {
             <span className="text-[#848E9C]">{balance} USDT</span>
           </div>
           <div className="pb-8 flex justify-between">
-            <button className="text-[#848E9C] underline" onClick={(e)=>{
-              
-              setSellAmount(balance-1)
-              setDataLong(balance-1, "Amount", "Short")
-              }} >Max Sell</button>
+            <button className="text-[#848E9C] underline" onClick={(e) => {
+
+              setSellAmount(balance - 1)
+              setDataLong(balance - 1, "Amount", "Short")
+            }} >Max Sell</button>
             {/* <span className="text-[#848E9C]">- {CurrencyType}</span> */}
           </div>
           {/* Sell Button */}
           <button
-            disabled={!isConnected}
+            disabled={!isConnected || loaderLong || loaderShort}
             className="w-full rounded-xl bg-[#f6465d] py-3 text-center font-semibold text-[14px] text-white -text-[#848E9C] hover:bg-[#dc3545]" onClick={() => handleShortClick(payloadShort)}>
-            {loaderShort ? <DottedLoader size="sm" color="blue" overlay={false} /> : "Short"}
+            {loaderShort ? <DottedLoader size="sm" color="white" overlay={false} /> : "Short"}
           </button>
         </div>
       </div>

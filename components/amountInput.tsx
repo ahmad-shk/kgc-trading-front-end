@@ -81,9 +81,10 @@ export default function AmountInput({
             <div className="flex items-center">
               <input
                 type="text"
+                placeholder="0"
                 value={value}
                 onChange={handleInputChange}
-                className="bg-transparent text-right text-[#edb546] outline-none w-24 sm:w-32"
+                className="bg-transparent text-right text-[#edb546] placeholder-[#edb546] outline-none w-24 sm:w-32"
               />
               <span className="ml-1 text-[#edb546]">{unit}</span>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 
 interface DottedLoaderProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
-  color?: 'blue' | 'gray';
+  color?: 'blue' | 'gray'| 'white';
   overlay?: boolean;
 }
 
@@ -16,6 +16,7 @@ const sizeMap = {
 const colorMap = {
   blue: 'bg-blue-500',
   gray: 'bg-gray-500',
+  white: 'bg-white',
 };
 
 const DottedLoader: React.FC<DottedLoaderProps> = ({
