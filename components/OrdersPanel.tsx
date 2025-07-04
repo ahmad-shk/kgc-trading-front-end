@@ -416,7 +416,9 @@ const OrdersPanel: React.FC = () => {
   return (
     <div className="bg-[#181A20] text-white p-2 sm:p-4 md:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
       {/* Tabs Section */}
-      <div className="flex flex-wrap gap-2 sm:gap-4 md:gap-8 border-b border-[#2B3139] rounded-t-2xl pb-4 ml-2 sm:ml-4 md:ml-6 overflow-x-auto">
+      <div 
+      className="flex flex-wrap gap-2 sm:gap-2 md:gap-2 border-b border-[#2B3139] rounded-t-2xl pb-2 ml-2 sm:ml-2 md:ml-2 overflow-x-auto"
+      >
         <div className="flex gap-2 sm:gap-4 md:gap-8 min-w-max px-2 sm:px-4 md:px-6">
           {tabs.map((tab) => (
             <button
