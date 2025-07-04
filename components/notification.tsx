@@ -12,8 +12,8 @@ interface Order {
   leverage: number;
   order_type: string;
   status:
-    | "LOSER"
-    | "WINNER"
+  | "LOSER"
+  | "WINNER"
   createdAt: string;
   transactionHash?: string;
 }
@@ -38,43 +38,10 @@ interface Notification {
   updatedAt: string;
 }
 
-const now = new Date();
-// const notifications: Notification[] = 
-// [
-//   {
-//     id: 1,
-//     type: "win",
-//     title: "EUR/USD +$245",
-//     unread: true,
-//     createdAt: new Date(now.getTime() - 2 * 60 * 1000).toISOString(), // 2 mins ago
-//   },
-//   {
-//     id: 2,
-//     type: "loss",
-//     title: "GBP/JPY -$89",
-//     unread: true,
-//     createdAt: new Date(now.getTime() - 15 * 60 * 1000).toISOString(), // 15 mins ago
-//   },
-//   {
-//     id: 3,
-//     type: "win",
-//     title: "BTC/USD +$1.2k",
-//     unread: false,
-//     createdAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(), // 1 hour ago
-//   },
-//   {
-//     id: 4,
-//     type: "loss",
-//     title: "ETH/USD -$340",
-//     unread: false,
-//     createdAt: new Date(now.getTime() - 3 * 60 * 1000).toISOString(), // 3 mins ago
-//   },
-// ];
-
 const notificationStyles = {
   'WINNER': {
     icon: <TrendingUp className="w-4 h-4 text-[#181A20]" />,
-    bg: "#EDB546",
+    bg: "#15b34c",
     label: "Win",
   },
   'LOSER': {
@@ -105,7 +72,7 @@ export default function NotificationComponent() {
       setData(orderRresults);
       const oneMonthAgo = new Date();
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-      
+
       const recentNotifications = orderRresults.filter(
         (n) => new Date(n?.createdAt).getTime() >= oneMonthAgo.getTime()
       );
@@ -158,7 +125,10 @@ export default function NotificationComponent() {
               recentNotifications.map((notification, index) => {
                 const { icon, bg, label } = notificationStyles[notification.status];
                 return (
-                  <div key={index}className="flex gap-2 px-3 py-2 items-start border-b border-[#2A2D3A] hover:bg-[#1F212A]">
+                  <div
+                    key={index}
+                    className="flex gap-2 px-3 py-2 items-start border-b border-[#2A2D3A] hover:bg-[#1F212A]"
+                  >
                     <div
                       className="p-2 rounded-full flex items-center justify-center"
                       style={{ backgroundColor: bg }}
@@ -167,9 +137,14 @@ export default function NotificationComponent() {
                     </div>
 
                     <div className="flex flex-col w-full text-white">
-                      <p className="text-sm">{notification.symbol}</p>
-                      <div className="flex justify-between text-xs text-gray-400">
-                        <span>{label}</span>
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm font-medium">{notification.symbol}</p>
+                        <p className="text-sm font-medium">
+                          {notification.status === "LOSER" ? "Loss" : "Win"}
+                        </p>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <span className="truncate max-w-[180px]">{notification?.order_id}</span>
                         <span>{getTimeAgo(notification.createdAt)}</span>
                       </div>
                     </div>
