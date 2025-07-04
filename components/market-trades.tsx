@@ -73,7 +73,7 @@ export default function MarketTrades() {
       <div className="py-2 px-2 flex justify-between text-[12px] font-semibold text-[#848E9C]">
         <div>{`Price (USDT)`}</div>
         <div className="w-[100px]">{`Amount (${teckerName})`}</div>
-        <div>Time</div>
+        <div className="pr-4">Time</div>
       </div>
 
       {/* Trades List */}
