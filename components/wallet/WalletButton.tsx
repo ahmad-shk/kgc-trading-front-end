@@ -64,11 +64,41 @@ const WalletButton = () => {
 
       toast.success("Wallet Connected successfully");
     } catch (err) {
+      logout();
+      createAcount();
       console.error("Login failed:", err);
     } finally {
       setLoading(false);
     }
   };
+
+  const createAcount = async () => {
+    try {
+      setLoading(true);
+      const user = await apiPost('/auth/account', {
+        walletAddress: checksummed
+      });
+      dispatch(setUserData(user));
+      localStorage.setItem('token', user.access_token);
+      dispatch(fetchOrders());
+      dispatch(fetchPool())
+      login();
+    } catch (err) {      
+      logout();
+      console.error("Cretae account failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    // setLoading(true);
+    // token clear from localStorage or axios
+    localStorage.removeItem('token');
+    axiosInstance.defaults.headers.common['Authorization'] = '';
+    dispatch(clearUserData());
+    // toast.error("Logout success")
+  }
 
   useEffect(() => {
     if (!isConnected) {
