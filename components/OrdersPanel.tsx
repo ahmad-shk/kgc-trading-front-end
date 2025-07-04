@@ -99,6 +99,8 @@ const OrdersPanel: React.FC = () => {
     if (pool) setPoolData(pool)
   }, [pool])
 
+
+
   const getActiveData = () => {
     if (!data) return []
     const sortByDate = <T extends { createdAt?: string }>(arr: T[]): T[] => {
@@ -118,7 +120,9 @@ const OrdersPanel: React.FC = () => {
       case "Trade History":
         return orderRresults
       case "Pool":
-        return poolData
+        // poolData has no createdAt field
+        return poolData;
+
       case "Funds":
         return fundsData
       default:
@@ -126,6 +130,8 @@ const OrdersPanel: React.FC = () => {
     }
   }
 
+
+  // console.log('orderRresults-->', orderRresults)
   const getTabCount = (tab: string) => {
     switch (tab) {
       case "Open Order":
@@ -412,6 +418,15 @@ const OrdersPanel: React.FC = () => {
       </div>
     )
   }
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="bg-[#181A20] text-white p-2 sm:p-4 md:p-6 rounded-3xl border border-gray-800 min-h-[300px] sm:min-h-[250px] w-full">
