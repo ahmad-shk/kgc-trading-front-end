@@ -118,7 +118,7 @@ const OrdersPanel: React.FC = () => {
         return sortByDate(orderHistory)
       }
       case "Trade History":
-        return orderRresults
+        return sortByDate(orderRresults)
       case "Pool":
         // poolData has no createdAt field
         return poolData;
