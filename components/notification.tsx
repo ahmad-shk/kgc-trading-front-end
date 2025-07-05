@@ -38,39 +38,6 @@ interface Notification {
   updatedAt: string;
 }
 
-const now = new Date();
-// const notifications: Notification[] = 
-// [
-//   {
-//     id: 1,
-//     type: "win",
-//     title: "EUR/USD +$245",
-//     unread: true,
-//     createdAt: new Date(now.getTime() - 2 * 60 * 1000).toISOString(), // 2 mins ago
-//   },
-//   {
-//     id: 2,
-//     type: "loss",
-//     title: "GBP/JPY -$89",
-//     unread: true,
-//     createdAt: new Date(now.getTime() - 15 * 60 * 1000).toISOString(), // 15 mins ago
-//   },
-//   {
-//     id: 3,
-//     type: "win",
-//     title: "BTC/USD +$1.2k",
-//     unread: false,
-//     createdAt: new Date(now.getTime() - 60 * 60 * 1000).toISOString(), // 1 hour ago
-//   },
-//   {
-//     id: 4,
-//     type: "loss",
-//     title: "ETH/USD -$340",
-//     unread: false,
-//     createdAt: new Date(now.getTime() - 3 * 60 * 1000).toISOString(), // 3 mins ago
-//   },
-// ];
-
 const notificationStyles = {
   'WINNER': {
     icon: <TrendingUp className="w-4 h-4 text-[#181A20]" />,
