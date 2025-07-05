@@ -52,12 +52,12 @@ const notificationStyles = {
 };
 
 function getTimeAgo(createdAt: string): string {
-  const minutes = Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000);
+  const minutes = Math?.floor((Date.now() - new Date(createdAt)?.getTime()) / 60000);
   return `${minutes} mins ago`;
 }
 
 export default function NotificationComponent() {
-  const { orderRresults } = useSelector((state: RootState) => state.pool) as {
+  const { orderRresults } = useSelector((state: RootState) => state?.pool) as {
     orderRresults: Notification[];
   };
 
@@ -75,7 +75,7 @@ export default function NotificationComponent() {
       const seenOrderIds = new Set<string>();
 
       const recentNotifications = orderRresults
-        .filter((n) => new Date(n?.createdAt).getTime() >= fiveMinutesAgo)
+        .filter((n) => new Date(n?.createdAt)?.getTime() >= fiveMinutesAgo)
         .filter((n) => {
           if (seenOrderIds?.has(n?.order_id)) return false;
           seenOrderIds?.add(n?.order_id);
@@ -88,12 +88,12 @@ export default function NotificationComponent() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef?.current && !dropdownRef?.current.contains(event?.target as Node)) {
+      if (dropdownRef?.current && !dropdownRef?.current?.contains(event?.target as Node)) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document?.addEventListener("mousedown", handleClickOutside);
+    return () => document?.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
 
@@ -129,7 +129,7 @@ export default function NotificationComponent() {
             {recentNotifications?.length === 0 ? (
               <div className="px-3 py-4 text-gray-400 text-center">No recent notifications</div>
             ) : (
-              recentNotifications.map((notification, index) => {
+              recentNotifications?.map((notification, index) => {
                 const { icon, bg } = notificationStyles[notification?.status];
                 return (
                   <div
