@@ -118,7 +118,7 @@ export default function TradingInterface() {
     const { symbol, order_type, amount, leverage, unit } = payload;
 
     if (isNaN(amount) || amount < 1)
-      return { success: false, message: "Amount must be at least 1" };
+      return { success: false, message: "Amount must be at least 5" };
     if (isNaN(amount) || amount >= balance)
       return { success: false, message: "you dont have enough USDT" };
     if (isNaN(amount) || balanceBNB <= 0.0015)

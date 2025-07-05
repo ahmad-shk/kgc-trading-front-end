@@ -39,12 +39,12 @@ interface Notification {
 }
 
 const notificationStyles = {
-  'WINNER': {
+  WINNER: {
     icon: <TrendingUp className="w-4 h-4 text-[#181A20]" />,
     bg: "#15b34c",
     label: "Win",
   },
-  'LOSER': {
+  LOSER: {
     icon: <TrendingDown className="w-4 h-4 text-[#181A20]" />,
     bg: "#F87171",
     label: "Loss",
@@ -60,23 +60,29 @@ export default function NotificationComponent() {
   const { orderRresults } = useSelector((state: RootState) => state.pool) as {
     orderRresults: Notification[];
   };
+
   const [data, setData] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const [recentNotifications, setrecentNotifications] = useState<Notification[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
   useEffect(() => {
     if (orderRresults?.length > 0) {
       setData(orderRresults);
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-      const recentNotifications = orderRresults.filter(
-        (n) => new Date(n?.createdAt).getTime() >= oneMonthAgo.getTime()
-      );
-      setrecentNotifications(recentNotifications)
+      const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+      const seenOrderIds = new Set<string>();
+
+      const recentNotifications = orderRresults
+        .filter((n) => new Date(n?.createdAt).getTime() >= fiveMinutesAgo)
+        .filter((n) => {
+          if (seenOrderIds.has(n.order_id)) return false;
+          seenOrderIds.add(n.order_id);
+          return true;
+        });
+
+      setrecentNotifications(recentNotifications);
     }
   }, [orderRresults]);
 
@@ -89,6 +95,7 @@ export default function NotificationComponent() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
 
   return (
     <div className="relative flex items-center justify-center">
@@ -123,7 +130,7 @@ export default function NotificationComponent() {
               <div className="px-3 py-4 text-gray-400 text-center">No recent notifications</div>
             ) : (
               recentNotifications.map((notification, index) => {
-                const { icon, bg, label } = notificationStyles[notification.status];
+                const { icon, bg } = notificationStyles[notification.status];
                 return (
                   <div
                     key={index}
