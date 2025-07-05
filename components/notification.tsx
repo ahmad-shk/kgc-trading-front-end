@@ -77,8 +77,8 @@ export default function NotificationComponent() {
       const recentNotifications = orderRresults
         .filter((n) => new Date(n?.createdAt).getTime() >= fiveMinutesAgo)
         .filter((n) => {
-          if (seenOrderIds.has(n.order_id)) return false;
-          seenOrderIds.add(n.order_id);
+          if (seenOrderIds?.has(n?.order_id)) return false;
+          seenOrderIds?.add(n?.order_id);
           return true;
         });
 
@@ -88,7 +88,7 @@ export default function NotificationComponent() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (dropdownRef?.current && !dropdownRef?.current.contains(event?.target as Node)) {
         setOpen(false);
       }
     };
@@ -104,9 +104,9 @@ export default function NotificationComponent() {
         className="relative p-2 rounded-full bg-[#edb546] hover:bg-[#edb546]/90"
       >
         <Bell className="w-5 h-5 text-black" />
-        {recentNotifications.length > 0 && (
+        {recentNotifications?.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-            {recentNotifications.length}
+            {recentNotifications?.length}
           </span>
         )}
       </button>
@@ -118,19 +118,19 @@ export default function NotificationComponent() {
         >
           <div className="border-b px-3 py-1 text-sm font-semibold flex justify-between items-center text-white">
             Notifications
-            {recentNotifications.length > 0 && (
+            {recentNotifications?.length > 0 && (
               <span className="text-xs bg-[#edb546] text-black px-2 py-0.5 rounded">
-                {recentNotifications.length} new
+                {recentNotifications?.length} new
               </span>
             )}
           </div>
 
           <div className="max-h-64 overflow-y-auto text-sm">
-            {recentNotifications.length === 0 ? (
+            {recentNotifications?.length === 0 ? (
               <div className="px-3 py-4 text-gray-400 text-center">No recent notifications</div>
             ) : (
               recentNotifications.map((notification, index) => {
-                const { icon, bg } = notificationStyles[notification.status];
+                const { icon, bg } = notificationStyles[notification?.status];
                 return (
                   <div
                     key={index}
@@ -145,14 +145,14 @@ export default function NotificationComponent() {
 
                     <div className="flex flex-col w-full text-white">
                       <div className="flex justify-between items-center">
-                        <p className="text-sm font-medium">{notification.symbol}</p>
+                        <p className="text-sm font-medium">{notification?.symbol}</p>
                         <p className="text-sm font-medium">
-                          {notification.status === "LOSER" ? "Loss" : "Win"}
+                          {notification?.status === "LOSER" ? "Loss" : "Win"}
                         </p>
                       </div>
                       <div className="flex justify-between text-xs text-gray-400 mt-1">
                         <span className="truncate max-w-[180px]">{notification?.order_id}</span>
-                        <span>{getTimeAgo(notification.createdAt)}</span>
+                        <span>{getTimeAgo(notification?.createdAt)}</span>
                       </div>
                     </div>
                   </div>
