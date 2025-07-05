@@ -55,8 +55,8 @@ export default function TradingInterface() {
   const [loaderShort, setLoaderShort] = React.useState<boolean>(false);
   const symbol = useSelector((state: any) => state.binance.symbol);
   const { orderBook, currentPrice, lastPrice } = useOrderBook(symbol, 1000);
-  const [buyAmount, setBuyAmount] = useState<number>()
-  const [sellAmount, setSellAmount] = useState<number>()
+  const [buyAmount, setBuyAmount] = useState<number>(0)
+  const [sellAmount, setSellAmount] = useState<number>(0)
   const [buyPercentage, setBuyPercentage] = useState(5)
   const [sellPercentage, setSellPercentage] = useState(5)
   const [CurrencyType, setCurrencyType] = useState<string>("");
