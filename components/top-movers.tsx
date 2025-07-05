@@ -34,8 +34,8 @@ export default function TopMovers() {
   return (
     <div className="h-full flex flex-col bg-[#181A20] -border -border-gray-800 rounded-xl">
       <div className="flex items-center justify-between px-3 pb-1 pt-4 border-b border-[#2B3139] rounded-t-xl">
-        <h3 className="font-medium text-xs text-[#EDB546]">Top Movers</h3>
-        <button className="text-[#6f6a6b] hover:text-white">
+        <h3 className="font-semibold text-[#edb546] pb-2">Top Movers</h3>
+        <button className="text-[#6f6a6b] pb-2  hover:text-white">
           <svg width="10" height="13" viewBox="0 0 10 13" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4.99324 5.99603C5.25857 5.99603 5.51388 5.8909 5.70111 5.70367L9.70604 1.70674C9.89339 1.51887 9.99842 1.26427 9.99805 0.998959C9.99767 0.733643 9.89191 0.479344 9.70404 0.292003C9.51617 0.104662 9.26157 -0.000374532 8.99626 1.00353e-06C8.73094 0.000376539 8.47664 0.106133 8.2893 0.294005L4.99224 3.58406L1.69518 0.294005C1.55428 0.158425 1.3768 0.0670206 1.1846 0.0310527C0.992407 -0.00491516 0.793884 0.0161238 0.613495 0.0915788C0.433105 0.167034 0.278728 0.293609 0.16938 0.45571C0.0600328 0.617811 0.000491142 0.808359 -0.00191021 1.00388C-0.00432587 1.26588 0.096364 1.51833 0.278434 1.70674L4.28337 5.70367C4.47156 5.89123 4.72754 5.99639 4.99324 5.99603Z" fill="#EDB546" />
             <path d="M4.99324 12.9941C5.25857 12.9941 5.51388 12.8889 5.70111 12.7017L9.70604 8.70479C9.89339 8.51692 9.99842 8.26232 9.99805 7.99701C9.99767 7.73169 9.89191 7.47739 9.70404 7.29005C9.51617 7.10271 9.26157 6.99767 8.99626 6.99805C8.73094 6.99842 8.47664 7.10418 8.2893 7.29205L4.99224 10.5821L1.69518 7.29205C1.55428 7.15647 1.3768 7.06507 1.1846 7.0291C0.992407 6.99313 0.793884 7.01417 0.613495 7.08963C0.433105 7.16508 0.278728 7.29166 0.16938 7.45376C0.0600328 7.61586 0.000491142 7.80641 -0.00191021 8.00193C-0.00432587 8.26393 0.096364 8.51637 0.278434 8.70479L4.28337 12.7017C4.47156 12.8893 4.72754 12.9944 4.99324 12.9941Z" fill="#EDB546" />
@@ -43,10 +43,10 @@ export default function TopMovers() {
         </button>
       </div>
 
-      <div className="flex justify-between px-3 py-2 text-[#848E9C] text-[10px] ">
-        <div>All</div>
-        <div>Change</div>
-        <div>New High/Low</div>
+      <div className="flex px-3 py-2 text-[#848E9C] text-[10px]">
+        <div className="w-1/3">All</div>
+        <div className="w-1/3 text-center">Change</div>
+        <div className="w-1/3 text-right">New High/Low</div>
       </div>
 
       <div className="flex flex-col pt-1 overflow-y-scroll max-h-[100px]">

@@ -97,7 +97,7 @@ export default function OrderBook() {
           <div className="text-right">Total</div>
         </div>
 
-        <div className="px-4">
+        <div className="px-4 ">
           {/* Sell orders (red) */}
           {orderBookData.asks?.length > 0 &&
             orderBookData.asks.slice(0, activeView === 1 ? 11 : activeView === 3 ? 17 : 0).map((order: any, index: number) => {
@@ -106,7 +106,7 @@ export default function OrderBook() {
               const total = typeof order.total === 'number' ? formatNumber(order.total) : '0.0000';
 
               return (
-                <div key={`sell-${index}`} className="grid grid-cols-3 py-1">
+                <div key={`sell-${index}`} className="flex justify-between py-1 ">
                   <div className="text-[#f6465d]">{order.price}</div>
                   <div className="text-[#edb546]">{amount}</div>
                   <div className="text-right text-[#edb546]">{total}</div>
@@ -140,7 +140,7 @@ export default function OrderBook() {
               const total = typeof order.total === 'number' ? formatNumber(order.total) : '0.0000';
 
               return (
-                <div key={`buy-${index}`} className="grid grid-cols-3 py-1">
+                <div key={`buy-${index}`} className="flex justify-between py-1">
                   <div className="text-[#15b34c]">{order.price}</div> {/* green price */}
                   <div className="text-[#edb546]">{amount}</div>
                   <div className="text-right text-[#edb546]">{total}</div> {/* time if available */}
