@@ -9,6 +9,8 @@ import type { AppDispatch, RootState } from "@/store/store"
 import { fetchPool, fetchResultsByUser } from "@/store/slices/poolSlice"
 import CountdownTimer from "./countdownTimer"
 import { Copy, ExternalLink } from "lucide-react"
+import { currentBalance } from "@/config/Web3Controller"
+import { balanceInnterface, setUserBalance } from "@/store/slices/binanceSlice"
 
 interface Order {
   _id: string
@@ -59,11 +61,23 @@ const OrdersPanel: React.FC = () => {
     }
   }, [userBalance])
 
+    const getBalance = async () => {
+  
+      try {
+        const balances = await currentBalance(address) as balanceInnterface;
+        dispatch(setUserBalance(balances))
+      }
+      catch (e) {
+        console.log('ERROR::', e)
+      }
+  
+    }
   useEffect(() => {
     if (!isConnected) return
     const fetch = () => {
       dispatch(fetchOrders())
       dispatch(fetchResultsByUser())
+      getBalance()
     }
     fetch()
     const now = new Date()
