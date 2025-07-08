@@ -92,6 +92,7 @@ const OrdersPanel: React.FC = () => {
   }, [isConnected, dispatch])
 
   useEffect(() => {
+        console.log(orders,'0000000000')
     if (orders) setData(orders)
   }, [orders])
 
@@ -112,6 +113,7 @@ const OrdersPanel: React.FC = () => {
         return sortByDate(openOrders)
       }
       case "Order History": {
+        console.log(data,'0000000000')
         const orderHistory = data.filter(
           (order) => order.status === "LOSER" || order.status === "WINNER" || order.status === "DRAW",
         )
