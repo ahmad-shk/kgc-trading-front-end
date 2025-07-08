@@ -39,38 +39,28 @@ const tradingPairs = [
 
 
 export default function Header() {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useBinanceWebSocket(tradingPairs);
   const { symbol } = useSelector((state: any) => state.binance);
   const { address, isConnected } = useAccount();
-
-  // ✅ Move this function above useEffects
-  const getBalance = async () => {
-    try {
-      const balances = await currentBalance(address) as balanceInnterface;
-      dispatch(setUserBalance(balances));
-    } catch (e) {
-      console.log('ERROR::', e);
-    }
-  };
-
-  // ✅ Immediate fetch on connect
   useEffect(() => {
     if (isConnected) {
-      getBalance();
+      getBalance()
     }
-  }, [isConnected]);
+  }, [isConnected])
 
-  // ✅ Set interval every 5 min
-  useEffect(() => {
-    if (!isConnected) return;
+  const getBalance = async () => {
 
-    const intervalId = setInterval(() => {
-      getBalance();
-    }, 300000); // every 5 minutes
+    try {
+      const balances = await currentBalance(address) as balanceInnterface;
+      dispatch(setUserBalance(balances))
+    }
+    catch (e) {
+      console.log('ERROR::', e)
+    }
 
-    return () => clearInterval(intervalId); // cleanup
-  }, [isConnected, address]);
+  }
+
 
   return (
     <header className="border-b border-[#1f2128] py-6">
