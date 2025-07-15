@@ -26,7 +26,7 @@ export default function AmountInput({
   const USER_BALANCE = userBalance?.usdt ?? '0';
   const [errorMsg, setErrorMsg] = useState("");
 
-  const numericValue = typeof value === "string" ? parseFloat(value) : value;
+  const numericValue = isNaN(Number(value)) ? 0 : Number(value);
 
   const incrementValue = () => {
     const newValue = numericValue + 1;
